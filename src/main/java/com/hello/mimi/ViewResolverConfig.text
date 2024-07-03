@@ -1,4 +1,8 @@
 /*
+// 뷰 리졸버가 우선순위로 작동하길 바랬는데, 잘 안됬음.
+// thymeleaf 가 있을 때는 작동하는데, thymeleaf 파일 없고, jsp 파일만 있을 때 jspResolver 작동 안함.
+// 후에 추가해서 수정하도록 하겠음.
+
 package com.hello.mimi;
 
 import org.springframework.context.annotation.Bean;
@@ -42,7 +46,7 @@ public class ViewResolverConfig implements WebMvcConfigurer {
         resolver.setCharacterEncoding("UTF-8");
         resolver.setOrder(1); // Thymeleaf의 우선 순위를 1로 설정합니다.
         resolver.setTemplateEngine(templateEngine());
-        resolver.setViewNames(new String[] {"*.html"}); // 여기 없애면 templates 내용 나옴.
+        // resolver.setViewNames(new String[] {"*.html"}); // 여기 없애면 templates 내용 나옴.
         return resolver;
     }
 
