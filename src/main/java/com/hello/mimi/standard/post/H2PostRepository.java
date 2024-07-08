@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository
 @RequiredArgsConstructor
-public class MybatisPostRepository implements PostDAO{
+public class H2PostRepository implements PostDAO{
 
     @Autowired
     private final PostMapper postMapper;
@@ -16,6 +16,4 @@ public class MybatisPostRepository implements PostDAO{
     public PostDTO readPost(Long postId) {
         return postMapper.readPost(postId);
     }
-
-
 }

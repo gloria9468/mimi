@@ -13,20 +13,21 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.hello.mimi.mapper.mybatis")
+//@MapperScan(basePackages = "com.hello.mimi.mapper.mybatis")
+@MapperScan(basePackages = "com.hello.mimi.mapper")
 @RequiredArgsConstructor
 public class MybatisConfig {
 
     private final DataSource dataSource;
 
-    @Value("${mybatis.mapper-locations}")
-    private String mybatisMapperLocations;
+    @Value("${mapper-locations}")
+    private String mapperLocations;
 
     @Bean
     public SqlSessionFactory sqlSessionFactory() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
-        factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mybatisMapperLocations));  // Add this line
+        factoryBean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(mapperLocations));  // Add this line
         return factoryBean.getObject();
     }
 
