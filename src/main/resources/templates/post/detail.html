@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" th:src="@{/js/open/jquery-3.6.0.min.js}"></script>
+    <title>Title</title>
+</head>
+<script type="text/javascript" th:inline="javascript">
+    $(function(){
+       console.log("---test");
+    });
+
+    function changeLanguage(){
+        $.ajax({
+            url : "/changeLanguage",
+            type : "post",
+            data : {
+                lang : $("select[name=lang]").val()
+            },
+            success: function(data) {
+                console.log("언어 변환");
+                location.reload(true);
+            },
+            error: function() {
+                alert("요청 처리 중 오류가 발생하였습니다! \n관리자에게 문의하세요!");
+            }
+        });
+    }
+
+</script>
+<body>
+    ㅅㄷㄴㅅ
+
+
+
+    <div>
+        <h1 th:text="${postDTO.title}"></h1>
+
+    </div>
+</body>
+</html>

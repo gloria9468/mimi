@@ -1,7 +1,10 @@
 package com.hello.mimi.standard;
 
+import com.hello.mimi.standard.post.Post;
 import com.hello.mimi.util.Language;
+import com.hello.mimi.util.LanguageDTO;
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,8 @@ public class MimiController {
     @Autowired
     Language language;
 
+
+
     @GetMapping("/chkMessage")
     public String mimiIndex(HttpSession session, Model model){
         model.addAttribute("changeLang", language);
@@ -28,8 +33,9 @@ public class MimiController {
     // 어떻게는 모르겠고, 언어를 바꾸라는 요청이 들어옴.
     @ResponseBody
     @PostMapping("/changeLanguage")
-    public void changeLanguage(@ModelAttribute Language changeLang, HttpSession session){
-        language.changeLanguage(changeLang, session);
+    public void changeLanguage(@ModelAttribute LanguageDTO languageDTO, HttpSession session){
+        language.changeLanguage(languageDTO, session);
     }
+
 
 }
