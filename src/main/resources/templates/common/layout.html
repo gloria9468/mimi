@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lagn="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head >
+<!--    <title layout:title-pattern="$CONTENT_TITLE || $LAYOUT_TITLE">공통 타이틀</title>-->
+    <title layout:title-pattern="$LAYOUT_TITLE :: $CONTENT_TITLE">미미</title>
+    <th:replace="~{common/config :: config}" />
+</head>
+
+<body>
+<!-- content -->
+<th:block layout:fragment="content"></th:block>
+
+<!-- footer -->
+<footer th:replace="common/footer::footer"></footer>
+</body>
+</html>

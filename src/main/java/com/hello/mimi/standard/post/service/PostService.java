@@ -1,6 +1,6 @@
-package com.hello.mimi.standard.post;
+package com.hello.mimi.standard.post.service;
 
-import org.springframework.stereotype.Service;
+import com.hello.mimi.standard.post.model.PostDTO;
 
 public interface PostService {
     void createPost(PostDTO postDTO);

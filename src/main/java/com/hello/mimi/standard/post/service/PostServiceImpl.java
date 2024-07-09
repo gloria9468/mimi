@@ -1,5 +1,7 @@
-package com.hello.mimi.standard.post;
+package com.hello.mimi.standard.post.service;
 
+import com.hello.mimi.standard.post.service.repository.PostDAO;
+import com.hello.mimi.standard.post.model.PostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

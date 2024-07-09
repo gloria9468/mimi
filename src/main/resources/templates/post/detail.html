@@ -1,15 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
 
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <script type="text/javascript" th:src="@{/js/open/jquery-3.6.0.min.js}"></script>
-    <title>Title</title>
+    <title layout:fragment="title">detail 상세페이지</title>
 </head>
+<th:block layout:fragment="content">
 <script type="text/javascript" th:inline="javascript">
-    $(function(){
-       console.log("---test");
-    });
+
 
     function changeLanguage(){
         $.ajax({
@@ -35,8 +35,11 @@
 
 
     <div>
-        <h1 th:text="${postDTO.title}"></h1>
+
+        <h1 th:text="${postDTO?.title}"></h1>
 
     </div>
 </body>
+
+</th:block>
 </html>

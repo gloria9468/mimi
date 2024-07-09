@@ -1,4 +1,4 @@
-package com.hello.mimi.standard.post;
+package com.hello.mimi.standard.post.model;
 
 import lombok.Getter;
 import lombok.Setter;
