@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<th:block th:fragment="header">
+<script type="text/javascript" th:inline="javascript">
+    $(function(){
+        console.log("header-----");
+    });
+    function changeLanguage(){
+        $.ajax({
+            url : "/changeLanguage",
+            type : "post",
+            data : {
+                lang : $("select[name=lang]").val()
+            },
+            success: function(data) {
+                console.log("언어 testee변환");
+                location.reload(true);
+            },
+            error: function() {
+                alert("요청 처리 중 오류가 발생하였습니다! \n관리자에게 문의하세요!");
+            }
+        });
+    }
+</script>
 <body>
-    <div>헤더-----</div>
+    <label>
+        <select name="lang" onchange="changeLanguage();">
+            <option th:each="language : ${languageEnum}"
+                    th:value="${language.code}"
+                    th:text="${language.displayName}"
+                    th:selected="${changeLanguage.lang.contains(language.code)}">
+            </option>
+        </select>
+    </label>
+
+    <div>
+        <h1 th:text="#{hello}"></h1>
+        <h2 th:text="#{hello.title}"></h2>
+    </div>
 </body>
+</th:block>
 </html>

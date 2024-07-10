@@ -18,5 +18,10 @@ public class MybatisPostRepository implements PostDAO {
         return postMapper.readPost(postId);
     }
 
+    @Override
+    public int createPost(PostDTO postDTO) {
+        return postMapper.createPost(postDTO);
+    }
+
 
 }

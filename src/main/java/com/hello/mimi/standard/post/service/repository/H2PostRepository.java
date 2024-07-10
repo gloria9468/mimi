@@ -16,4 +16,11 @@ public class H2PostRepository implements PostDAO {
     public PostDTO readPost(Long postId) {
         return postMapper.readPost(postId);
     }
+
+    @Override
+    public int createPost(PostDTO postDTO) {
+        return 0;
+    }
+
+
 }

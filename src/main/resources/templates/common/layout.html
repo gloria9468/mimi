@@ -3,17 +3,25 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
-<head >
-<!--    <title layout:title-pattern="$CONTENT_TITLE || $LAYOUT_TITLE">공통 타이틀</title>-->
+<head>
     <title layout:title-pattern="$LAYOUT_TITLE :: $CONTENT_TITLE">미미</title>
-    <th:replace="~{common/config :: config}" />
+    <th:block th:replace="~{common/config :: config}" />
 </head>
 
-<body>
+<body style="padding:0px 10px;">
+<!-- header -->
+<div style="border:1px solid black;">
+    <header th:replace="common/header::header"></header>
+</div>
+
 <!-- content -->
-<th:block layout:fragment="content"></th:block>
+<div style="border:1px solid red; padding:15px;">
+    <th:block layout:fragment="content"></th:block>
+</div>
 
 <!-- footer -->
-<footer th:replace="common/footer::footer"></footer>
+<div style="border:1px solid green;">
+    <footer th:replace="common/footer::footer"></footer>
+</div>
 </body>
 </html>

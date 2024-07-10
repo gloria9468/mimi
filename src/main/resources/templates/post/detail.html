@@ -8,27 +8,6 @@
     <title layout:fragment="title">detail 상세페이지</title>
 </head>
 <th:block layout:fragment="content">
-<script type="text/javascript" th:inline="javascript">
-
-
-    function changeLanguage(){
-        $.ajax({
-            url : "/changeLanguage",
-            type : "post",
-            data : {
-                lang : $("select[name=lang]").val()
-            },
-            success: function(data) {
-                console.log("언어 변환");
-                location.reload(true);
-            },
-            error: function() {
-                alert("요청 처리 중 오류가 발생하였습니다! \n관리자에게 문의하세요!");
-            }
-        });
-    }
-
-</script>
 <body>
     ㅅㄷㄴㅅ
 

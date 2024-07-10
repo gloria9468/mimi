@@ -4,4 +4,6 @@ import com.hello.mimi.standard.post.model.PostDTO;
 
 public interface PostDAO {
     PostDTO readPost(Long postId);
+
+    int createPost(PostDTO postDTO);
 }

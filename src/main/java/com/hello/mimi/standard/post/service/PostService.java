@@ -3,7 +3,7 @@ package com.hello.mimi.standard.post.service;
 import com.hello.mimi.standard.post.model.PostDTO;
 
 public interface PostService {
-    void createPost(PostDTO postDTO);
+    int createPost(PostDTO postDTO);
 
     PostDTO readPost(Long postId);
 
