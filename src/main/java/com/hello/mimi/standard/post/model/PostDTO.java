@@ -9,6 +9,7 @@ public class PostDTO {
     private String title;
     private String postType;
 
+    private PostDTO childPostDTO;
 
 
     public PostDTO() {

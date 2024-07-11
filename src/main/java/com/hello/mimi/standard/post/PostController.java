@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -39,38 +40,68 @@ public class PostController {
     }
 
 
-
+    /*
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        System.out.println("init--------");
-        binder.registerCustomEditor(PostDTO.class, new PropertyEditorSupport() {
+        System.out.println("init binder ---------");
+        binder.registerCustomEditor(String.class, "postType", new PropertyEditorSupport() {
             @Override
-            public void setAsText(String type) throws IllegalArgumentException {
-                System.out.println("set--------");
-                PostDTO postDTO = PostDTOFactory.createPostDTO(type);
+            public void setAsText(String postType) throws IllegalArgumentException {
+                System.out.println("set-------" + postType);
+                HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+                PostDTO postDTO = PostDTOFactory.createPostDTO(postType);
+
+                if (postDTO instanceof TextPostDTO) {
+                    System.out.println("TextPostDTO instance detected");
+                } else if (postDTO instanceof PhotoPostDTO) {
+                    System.out.println("PhotoPostDTO instance detected");
+                } else {
+                    System.out.println("Unknown PostDTO instance");
+                }
+                System.out.println("PostDTO instance detected: " + postDTO.getClass().getSimpleName());
+
                 setValue(postDTO);
             }
         });
     }
 
+     */
 
+
+    @ModelAttribute("postDTO")
+    public PostDTO createPostDTO(@RequestParam(required = false) String postType) {
+        return PostDTOFactory.createPostDTO(postType);
+    }
 
     @PostMapping("/create")
+    public String createPost(@ModelAttribute("postDTO") PostDTO postDTO, BindingResult result, RedirectAttributes redirectAttributes) {
+        System.out.println("createPostㄴㅇㄹㄴㅇㄹ 메소드 ---------");
+        System.out.println(postDTO.getPostType());
+        System.out.println(result.getTarget());
+
+        if (postDTO instanceof TextPostDTO) {
+            System.out.println("TextPostDTO instance detected");
+        } else if (postDTO instanceof PhotoPostDTO) {
+            System.out.println("PhotoPostDTO instance detected");
+        } else {
+            System.out.println("Unknown PostDTO instance");
+        }
+        System.out.println("PostDTO instance detected: " + postDTO.getClass().getSimpleName());
+
+        int createCnt = postService.createPost(postDTO);
+        // System.out.println("cret-----" + createCnt);
+
+        redirectAttributes.addAttribute("postId", postDTO.getPostId()); // 예시로 postId 값 설정
+
+        return "redirect:{postId}";
+    }
+
+
+
+    //@PostMapping("/create")
     public String createPost(HttpServletRequest request, RedirectAttributes redirectAttributes) {
         String postType = request.getParameter("postType");
-
-        PostDTO postDTO;
-        if ("text".equals(postType)) {
-            postDTO = new TextPostDTO();
-            postDTO.setTitle(request.getParameter("title"));
-            ((TextPostDTO) postDTO).setBody(request.getParameter("body"));
-        } else if ("photo".equals(postType)) {
-            postDTO = new PhotoPostDTO();
-            postDTO.setTitle(request.getParameter("title"));
-            ((PhotoPostDTO) postDTO).setPhotoUrl(request.getParameter("photoUrl"));
-        } else {
-            throw new IllegalArgumentException("Unknown type: " + postType);
-        }
+        PostDTO postDTO = PostDTOFactory.createPostDTO(postType, request);
 
         if (postDTO instanceof TextPostDTO) {
             System.out.println("TextPostDTO instance detected");
