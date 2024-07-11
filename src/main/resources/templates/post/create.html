@@ -10,6 +10,7 @@
 <th:block layout:fragment="content">
 <body>
     <form action="detail.html" th:action method="post">
+        <input type="hidden" name="postType" value="text">
         <div class="mb-3">
             <label for="title" class="form-label" th:text="#{post.title}">제목</label>
             <input type="text" name="title" class="form-control" id="title"  placeholder="제목을 작성해주세요.">

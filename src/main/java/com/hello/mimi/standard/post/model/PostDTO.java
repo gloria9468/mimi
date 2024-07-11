@@ -7,6 +7,19 @@ import lombok.Setter;
 public class PostDTO {
     private Long postId;
     private String title;
-    private String body;
+    private String postType;
 
+
+
+    public PostDTO() {
+    }
+
+    @Override
+    public String toString() {
+        return "PostDTO{" +
+                "postId=" + postId +
+                ", title='" + title + '\'' +
+                ", postType='" + postType + '\'' +
+                '}';
+    }
 }

@@ -4,14 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class PhotoPostDTO extends PostDTO{
-    private String photoUrl;
+public class TextPostDTO extends PostDTO {
+    private String body;
 
     @Override
     public String getPostType() {
-        return "photo";
+        return "text";
     }
 
-    public PhotoPostDTO() {
+    public TextPostDTO() {
+
     }
 }
