@@ -5,9 +5,9 @@ import com.hello.mimi.standard.post.model.PostDTO;
 public interface PostService {
     int createPost(PostDTO postDTO);
 
-    PostDTO readPost(Long postId);
+    PostDTO readPost(String postType, Long postId);
 
-    void updatePost(PostDTO postDTO);
+    int updatePost(PostDTO postDTO);
 
     void deletePost(Long postId);
 }

@@ -8,15 +8,29 @@
     <title layout:fragment="title">detail 상세페이지</title>
 </head>
 <th:block layout:fragment="content">
+<script type="text/javascript" th:inline="javascript">
+    function fnUpdate(e){
+        var postId = $(e).data("post-id");
+        var postType = $(e).data("post-type");
+        //var url = "/post/"+postId+"/update";
+        var url = "/post/"+[[${postDTO?.postId}]]+"/update"; // js에서 타임리프 값 사용.
+        var param = "postType=" + postType;
+        location.href = url + "?" + param
+    }
+</script>
 <body>
-    ㅅㄷㄴㅅ
-
-
-
     <div>
+        <h3 th:text="${postDTO?.postId}"></h3>
+        <h3 th:text="${postDTO?.title}"></h3>
+        <h3 th:text="${postDTO?.postType}"></h3>
 
-        <h1 th:text="${postDTO?.title}"></h1>
 
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    th:attr="data-post-id=${postDTO.postId}, data-post-type=${postDTO.postType}"
+                    th:onclick="|fnUpdate(this);|"
+                    type="button">수정</button>
+        </div>
     </div>
 </body>
 

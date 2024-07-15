@@ -16,13 +16,13 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostDTO readPost(Long postId) {
-        return postDAO.readPost(postId);
+    public PostDTO readPost(String postType, Long postId) {
+        return postDAO.readPost(postType, postId);
     }
 
     @Override
-    public void updatePost(PostDTO postDTO) {
-
+    public int updatePost(PostDTO postDTO) {
+        return postDAO.updatePost(postDTO);
     }
 
     @Override

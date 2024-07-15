@@ -8,26 +8,49 @@
     <title layout:fragment="title">새로운 생성페이지</title>
 </head>
 <th:block layout:fragment="content">
+<script type="text/javascript" th:inline="javascript">
+    function clickSubmit() {
+        var param = $("#postCreateForm").serialize();
+        var url = "/post/"+[[${postDTO?.postId}]];
+        $.ajax({
+            url: url,
+            type: "put",
+            data: param,
+            success: function (data) {
+                var postType = data.postType;
+                location.replace(url + "?postType=" + postType);
+            },
+            error: function () {
+                alert("요청 처리 중 오류가 발생하였습니다! \n관리자에게 문의하세요!");
+            }
+        });
+    }
+</script>
 <body>
-    <form action="detail.html" th:action method="post">
+    <form id="postCreateForm" action="detail.html" th:action method="post">
         <input type="hidden" name="postType" value="text">
         <div class="mb-3">
             <label for="title" class="form-label" th:text="#{post.title}">제목</label>
-            <input type="text" name="title" class="form-control" id="title"  placeholder="제목을 작성해주세요.">
+            <input type="text" name="title" class="form-control" id="title"  placeholder="제목을 작성해주세요." th:value="${postDTO?.title}">
         </div>
         <div class="mb-3">
             <label for="body" class="form-label" th:text="#{post.body}">내용</label>
-            <textarea name="body" class="form-control" id="body" rows="3" placeholder="글 내용을 작성해주세요."></textarea>
+            <textarea name="body" class="form-control" id="body" rows="3" placeholder="글 내용을 작성해주세요." th:value="${postDTO?.body}"></textarea>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col" th:if="${postDTO != null}">
+                <button class="w-100 btn btn-secondary btn-lg" th:onclick="|clickSubmit();|" type="button">수정</button>
+            </div>
+            <div class="col" th:unless="${postDTO != null}">
                 <button class="w-100 btn btn-primary btn-lg" type="submit">작성 완료</button>
             </div>
+
             <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg"
-                        th:onclick="|location.href='@{/create}'|"
-                        type="button">취소</button>
+                <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/create}'|" type="button">취소</button>
             </div>
+
+
+
         </div>
     </form>
 

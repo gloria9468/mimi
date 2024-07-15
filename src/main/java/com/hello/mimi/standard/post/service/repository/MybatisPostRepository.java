@@ -16,28 +16,37 @@ public class MybatisPostRepository implements PostDAO {
     private final PostMapper postMapper;
 
     @Override
-    public PostDTO readPost(Long postId) {
-        return postMapper.readPost(postId);
+    public PostDTO readPost(String postType, Long postId) {
+        if (postType.equals("text")) {
+            return postMapper.readTextPost(postId);
+        } else if (postType.equals("photo")) {
+            return postMapper.readPhotoPost(postId);
+        }else {
+            throw new IllegalArgumentException("exception --- from :: readRost ----");
+        }
     }
 
-//    @Override
-//    public int createPost(PostDTO postDTO) {
-//        return postMapper.createPost(postDTO);
-//    }
 
     @Override
     public int createPost(PostDTO postDTO) {
-        // Handle the creation logic based on the type of PostDTO
-
         if (postDTO instanceof TextPostDTO) {
-            System.out.println("11");
             return postMapper.insertTextPost((TextPostDTO) postDTO);
         } else if (postDTO instanceof PhotoPostDTO) {
-            System.out.println("22");
             return postMapper.insertPhotoPost((PhotoPostDTO) postDTO);
+        }else {
+            throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
         }
-        System.out.println("33");
-        return 0;
+    }
+
+    @Override
+    public int updatePost(PostDTO postDTO) {
+        if (postDTO instanceof TextPostDTO) {
+            return postMapper.updateTextPost((TextPostDTO) postDTO);
+        } else if (postDTO instanceof PhotoPostDTO) {
+            return postMapper.updatePhotoPost((PhotoPostDTO) postDTO);
+        }else {
+            throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
+        }
     }
 
 

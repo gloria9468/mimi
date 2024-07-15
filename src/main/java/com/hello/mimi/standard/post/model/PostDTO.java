@@ -2,6 +2,9 @@ package com.hello.mimi.standard.post.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Getter @Setter
 public class PostDTO {
@@ -9,8 +12,10 @@ public class PostDTO {
     private String title;
     private String postType;
 
-    private PostDTO childPostDTO;
-
+    @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm")
+    private Date regDate;
+    @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm")
+    private Date modifyDate;
 
     public PostDTO() {
     }

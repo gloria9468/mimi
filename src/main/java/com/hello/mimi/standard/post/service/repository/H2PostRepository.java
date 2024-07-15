@@ -7,20 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 //@Repository
 @RequiredArgsConstructor
-public class H2PostRepository implements PostDAO {
-
+public class H2PostRepository  { // implements PostDAO
+    /*
     @Autowired
     private final PostMapper postMapper;
 
     @Override
-    public PostDTO readPost(Long postId) {
-        return postMapper.readPost(postId);
+    public PostDTO readPost(String postType, Long postId) {
+        return null;
     }
 
     @Override
     public int createPost(PostDTO postDTO) {
         return 0;
     }
+     */
 
 
 }
