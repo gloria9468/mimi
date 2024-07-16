@@ -9,5 +9,5 @@ public interface PostService {
 
     int updatePost(PostDTO postDTO);
 
-    void deletePost(Long postId);
+    int deletePost(PostDTO postDTO);
 }

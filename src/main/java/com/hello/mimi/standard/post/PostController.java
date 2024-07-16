@@ -25,16 +25,8 @@ public class PostController {
         return "post/create";
     }
 
-    /*
-    @GetMapping("/{postId}")
-    public String readPost(@ModelAttribute("postType") String postType, @PathVariable Long postId, Model model) {
-        PostDTO postDTO = PostDTOFactory.createPostDTO(postType);
-        postDTO = postService.readPost(postType, postId);
 
-        Object postDTOInstance = PostDTOFactory.convertPostDTO(postDTO);
-        model.addAttribute("postDTO", postDTOInstance);
-        return "post/detail";
-    }
-*/
+
+
 
 }

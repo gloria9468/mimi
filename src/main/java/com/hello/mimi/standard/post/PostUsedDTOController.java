@@ -73,9 +73,11 @@ public class PostUsedDTOController {
         return ResponseEntity.ok(postDTO);
     }
 
+    @ResponseBody
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<PostDTO> deletePost(@PathVariable Long postId, @ModelAttribute PostDTO postDTO) {
+        postDTO.setPostId(postId);
+        int delCnt = postService.deletePost(postDTO);
+        return ResponseEntity.ok(postDTO);
     }
 }

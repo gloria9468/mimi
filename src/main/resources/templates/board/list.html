@@ -5,7 +5,7 @@
 
 
 <head>
-    <title layout:fragment="title">detail 상세페이지</title>
+    <title layout:fragment="title">list 페이지</title>
 </head>
 <th:block layout:fragment="content">
 <script type="text/javascript" th:inline="javascript">
@@ -36,28 +36,32 @@
         });
     }
 </script>
+    <style>
+        table.table.table-hover tr:hover{cursor: pointer;}
+    </style>
 <body>
-    <div>
-        <h3 th:text="${postDTO?.postId}"></h3>
-        <h3 th:text="${postDTO?.title}"></h3>
-        <h3 th:text="${postDTO?.postType}"></h3>
-        <h3 th:text="${postDTO?.status}"></h3>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col" th:text="#{board.title}">제목</th>
+            <th scope="col" th:text="#{board.postType}">포스팅 타입</th>
+            <th scope="col" th:text="#{board.regDate}">등록일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="board : ${boardList}">
+            <tr th:onclick="|location.href='@{/post/{postId}(postId=${board.postId},postType=${board.postType})}'|">
 
+            <td th:text="${board.postId}">아이디</td>
+            <td th:text="${board.title}">타이틀</td>
+            <td th:text="${board.postType}">타입</td>
+            <td th:text="${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}">등록일</td>
+        </tr>
+        </th:block>
 
-        <div class="row">
-            <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg"
-                        th:attr="data-post-id=${postDTO.postId}, data-post-type=${postDTO.postType}"
-                        th:onclick="|fnUpdate(this);|"
-                        type="button">수정</button>
-            </div>
-            <div class="col">
-                <button class="w-100 btn btn-danger btn-lg"
-                        th:onclick="|fnPostReq('delete');|"
-                        type="button">삭제</button>
-            </div>
-        </div>
-    </div>
+        </tbody>
+    </table>
 </body>
 
 </th:block>

@@ -26,7 +26,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void deletePost(Long postId) {
-
+    public int deletePost(PostDTO postDTO) {
+        return postDAO.deletePost(postDTO);
     }
 }
