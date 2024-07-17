@@ -2,6 +2,7 @@ package com.hello.mimi.standard.post;
 
 import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.standard.post.service.PostService;
+import com.hello.mimi.util.PostTypeEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.ls.LSOutput;
 
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
 
 import static java.awt.SystemColor.text;
 
@@ -50,14 +52,24 @@ public class PostUsedDTOController {
         postDTO.setPostId(postId);
         String postType = postDTO.getPostType();
         postDTO = postService.readPost(postType, postId);
+        PostTypeEnum[] postTypeEnum = PostTypeEnum.values();
 
+        model.addAttribute("postTypeEnum", postTypeEnum);
         model.addAttribute("postDTO", postDTO);
         return "post/create";
     }
 
     @PostMapping("/create")
-    public String createPost(@ModelAttribute("postDTO") PostDTO postDTO, RedirectAttributes redirectAttributes) {
+    public String createPost(@ModelAttribute("postDTO") PostDTO postDTO, RedirectAttributes redirectAttributes) throws IOException {
         System.out.println( postDTO.hashCode() );
+
+        if (postDTO instanceof PhotoPostDTO) {
+            PostDTO pDTO = (PostDTO) postDTO;
+
+            //int createTextPostCnt = postService.createPost( pDTO );
+            postDTO = PostDTOFactory.makePhotoDir((PhotoPostDTO) postDTO);
+        }
+
         int createCnt = postService.createPost(postDTO);
         redirectAttributes.addFlashAttribute("postDTO", postDTO);
         redirectAttributes.addAttribute("postId", postDTO.getPostId());

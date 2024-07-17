@@ -40,6 +40,22 @@
         table.table.table-hover tr:hover{cursor: pointer;}
     </style>
 <body>
+    <div style="height: 50px;">
+        <button type="button" class="btn btn-primary" style="width: 100px; float: right;" th:onclick="|location.href='@{/post/create}'|">글쓰기</button>
+    </div>
+    <form action="/board/list" method="post" >
+    <div style="display: flex;">
+        <select class="form-select" name="cntPerPage" style="width: 80px;">
+            <option th:each="cntPerPage : ${cntPerPageEnum}"
+                    th:value="${cntPerPage.cntPerPage}"
+                    th:text="${cntPerPage.displayName}"
+                    th:selected="${cntPerPage.cntPerPage} == ${filter?.cntPerPage}">
+            </option>
+        </select>
+        <input type="text" name="title" class="form-control" id="title"  placeholder="제목을 작성해주세요." th:value="${filter?.title}"/>
+        <button type="submit" class="btn btn-outline-success" style="width: 100px;">검색</button>
+    </div>
+    </form>
     <table class="table table-hover">
         <thead>
         <tr>

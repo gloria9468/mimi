@@ -1,22 +1,21 @@
 package com.hello.mimi.util;
 
-import com.hello.mimi.standard.post.model.PostDTO;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 public class SearchFilter {
     // 현재페이지
-    private int pageindex = 1;
+    private int pageIndex = 1;
 
     // 페이지네이션해서 제일 끝 페이지 번호
-    private int pageunit = 10;
+    private int pageUnit = 10;
 
     // 한번에 페이지 버튼을 몇개 보일 것인지.
-    private int pagesize = 10;
+    private int pageSize = 10;
 
     // 페이지 당 레코드 개수
-    private int cntperpage = 3;
+    private int cntPerPage = 3;
 
     // 총 데이터 갯수
     private int totalCnt = 0;
@@ -25,18 +24,18 @@ public class SearchFilter {
     private int endRowNum = 10;
 
     public int getStartRowNum() {
-        startRowNum = (pageindex-1) * cntperpage;
+        startRowNum = (pageIndex -1) * cntPerPage;
         return startRowNum;
     }
 
     public int getEndRowNum() {
-        endRowNum = pageindex * cntperpage;
+        endRowNum = pageIndex * cntPerPage;
         return endRowNum;
     }
 
-    public int getPageunit() {
-        double pu = (double) totalCnt / cntperpage;
-        pageunit = (int) Math.ceil( pu );
-        return pageunit;
+    public int getPageUnit() {
+        double pu = (double) totalCnt / cntPerPage;
+        pageUnit = (int) Math.ceil( pu );
+        return pageUnit;
     }
 }

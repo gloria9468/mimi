@@ -1,10 +1,7 @@
 package com.hello.mimi.standard.post.service.repository;
 
 import com.hello.mimi.mapper.PostMapper;
-import com.hello.mimi.standard.post.model.PhotoPostDTO;
-import com.hello.mimi.standard.post.model.PostDTO;
-import com.hello.mimi.standard.post.model.PostSearchFilter;
-import com.hello.mimi.standard.post.model.TextPostDTO;
+import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.util.SearchFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +38,9 @@ public class MybatisPostRepository implements PostDAO {
         if (postDTO instanceof TextPostDTO) {
             return postMapper.insertTextPost((TextPostDTO) postDTO);
         } else if (postDTO instanceof PhotoPostDTO) {
+            for( FileInfo fInfo : ((PhotoPostDTO) postDTO).getFileInfos() ) {
+                System.out.println(fInfo.toString());
+            }
             return postMapper.insertPhotoPost((PhotoPostDTO) postDTO);
         }else {
             throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");

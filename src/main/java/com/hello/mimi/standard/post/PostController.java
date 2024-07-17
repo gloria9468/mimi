@@ -5,6 +5,8 @@ import com.hello.mimi.standard.post.model.PostDTO;
 import com.hello.mimi.standard.post.model.PostDTOFactory;
 import com.hello.mimi.standard.post.model.TextPostDTO;
 import com.hello.mimi.standard.post.service.PostService;
+import com.hello.mimi.util.CntPerPageEnum;
+import com.hello.mimi.util.PostTypeEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,9 @@ public class PostController {
     PostService postService;
 
     @GetMapping("/create")
-    public String createPostForm() {
+    public String createPostForm(Model model) {
+        PostTypeEnum[] postTypeEnum = PostTypeEnum.values();
+        model.addAttribute("postTypeEnum", postTypeEnum);
         return "post/create";
     }
 

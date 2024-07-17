@@ -23,6 +23,7 @@ public interface PostMapper {
             "    AND p.title LIKE CONCAT('%', #{title}, '%')" +
             "  </if>" +
             "</where>" +
+            "LIMIT #{startRowNum}, #{cntPerPage}" +
             "</script>")
     List<PostDTO> postListByFilter(SearchFilter searchFilter);
 
@@ -39,7 +40,12 @@ public interface PostMapper {
     @Options(useGeneratedKeys = true, keyProperty = "postId", keyColumn = "post_id")
     int insertTextPost(TextPostDTO postDTO);
 
-    @Insert("INSERT INTO post (title, photoUrl) VALUES (#{postDTO.title}, #{postDTO.photoUrl})")
+    @Insert("<script>" +
+            "INSERT INTO post_photo_info (post_id, save_folder, origin_file_name, save_file) VALUES " +
+            "<foreach collection='postDTO.fileInfos' item='fileinfo' separator=' , '>" +
+                "(#{postDTO.postId}, #{fileinfo.saveFolder}, #{fileinfo.originFileName}, #{fileinfo.saveFile})" +
+		    "</foreach>" +
+            "</script>")
     @Options(useGeneratedKeys = true, keyProperty = "postId", keyColumn = "post_id")
     int insertPhotoPost(@Param("postDTO") PhotoPostDTO postDTO);
 
