@@ -45,7 +45,7 @@
     </div>
     <form action="/board/list" method="post" >
     <div style="display: flex;">
-        <select class="form-select" name="cntPerPage" style="width: 80px;">
+        <select class="form-select" name="cntPerPage" style="width: 80px;" th:onchange="|$('form').submit();|">
             <option th:each="cntPerPage : ${cntPerPageEnum}"
                     th:value="${cntPerPage.cntPerPage}"
                     th:text="${cntPerPage.displayName}"

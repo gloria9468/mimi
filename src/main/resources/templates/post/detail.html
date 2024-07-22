@@ -43,6 +43,9 @@
         <h3 th:text="${postDTO?.postType}"></h3>
         <h3 th:text="${postDTO?.status}"></h3>
 
+        <th:block th:each="file : ${postDTO.fileInfos}">
+            <img th:src="|${postDTO.fileStorePath}/${file.saveFolder}/${file.saveFile}|" th:srclang="${file.originFileName}" />
+        </th:block>
 
         <div class="row">
             <div class="col">

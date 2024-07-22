@@ -1,9 +1,6 @@
 package com.hello.mimi.mapper;
 
-import com.hello.mimi.standard.post.model.PhotoPostDTO;
-import com.hello.mimi.standard.post.model.PostDTO;
-import com.hello.mimi.standard.post.model.PostSearchFilter;
-import com.hello.mimi.standard.post.model.TextPostDTO;
+import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.util.SearchFilter;
 import org.apache.ibatis.annotations.*;
 
@@ -30,11 +27,21 @@ public interface PostMapper {
     @Select("SELECT post_id, title, body, post_type, status FROM post WHERE post_id = #{postId}")
     TextPostDTO readTextPost(@Param("postId") Long postId);
 
-    @Select("SELECT p.post_id, p.title, p.post_type, ph.photo_url " +
-            "FROM post p, post_photo_info ph " +
-            "WHERE p.post_id = ph.post_id " +
-            "and p.post_id = #{postId}")
+    @Select("SELECT p.post_id, p.title, p.post_type, p.status " +
+            "FROM post p " +
+            "WHERE p.post_id = #{postId}")
+    @Results({
+            @Result(column="post_id", property="postId"),
+            @Result(column="title", property="title"),
+            @Result(column="post_type", property="postType"),
+            @Result(property="fileInfos", column="post_id",
+                    many=@Many(select="selectPostPhotos"))
+    })
     PhotoPostDTO readPhotoPost(@Param("postId") Long postId);
+
+    @Select("SELECT save_folder, origin_file_name, save_file FROM post_photo_info WHERE post_id = #{postId}")
+    List<FileInfo> selectPostPhotos(Long postId);
+
 
     @Insert("INSERT INTO post (title, body, status) VALUES (#{title}, #{body}, '1')")
     @Options(useGeneratedKeys = true, keyProperty = "postId", keyColumn = "post_id")
@@ -46,7 +53,6 @@ public interface PostMapper {
                 "(#{postDTO.postId}, #{fileinfo.saveFolder}, #{fileinfo.originFileName}, #{fileinfo.saveFile})" +
 		    "</foreach>" +
             "</script>")
-    @Options(useGeneratedKeys = true, keyProperty = "postId", keyColumn = "post_id")
     int insertPhotoPost(@Param("postDTO") PhotoPostDTO postDTO);
 
     @Update("UPDATE post SET title = #{title}, body = #{body} WHERE post_id = #{postId}")

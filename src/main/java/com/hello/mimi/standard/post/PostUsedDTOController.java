@@ -4,6 +4,7 @@ import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.standard.post.service.PostService;
 import com.hello.mimi.util.PostTypeEnum;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,7 @@ public class PostUsedDTOController {
     public String readPost(@ModelAttribute("postDTO") PostDTO postDTO, @PathVariable Long postId, Model model) {
         String postType = postDTO.getPostType();
         postDTO = postService.readPost(postType, postId);
-
+        System.out.println(((PhotoPostDTO) postDTO).getFileInfos().size());
         //Object postDTOInstance = PostDTOFactory.convertPostDTO(postDTO);
         //model.addAttribute("postDTO", postDTOInstance);
         model.addAttribute("postDTO", postDTO);
@@ -64,13 +65,18 @@ public class PostUsedDTOController {
         System.out.println( postDTO.hashCode() );
 
         if (postDTO instanceof PhotoPostDTO) {
-            PostDTO pDTO = (PostDTO) postDTO;
+            PostDTO pDTO = new TextPostDTO();
+            pDTO.setTitle( postDTO.getTitle() );
+            pDTO.setPostType( postDTO.getPostType() );
 
-            //int createTextPostCnt = postService.createPost( pDTO );
+            int createTextPostCnt = postService.createPost( pDTO );
+            System.out.println("createTextPostCnt-----" + createTextPostCnt);
+            postDTO.setPostId(pDTO.getPostId());
             postDTO = PostDTOFactory.makePhotoDir((PhotoPostDTO) postDTO);
+        } else if (postDTO instanceof TextPostDTO) {
+            int createCnt = postService.createPost(postDTO);
         }
 
-        int createCnt = postService.createPost(postDTO);
         redirectAttributes.addFlashAttribute("postDTO", postDTO);
         redirectAttributes.addAttribute("postId", postDTO.getPostId());
 
