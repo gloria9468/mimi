@@ -23,13 +23,13 @@ public class MybatisPostRepository implements PostDAO {
 
     @Override
     public PostDTO readPost(String postType, Long postId) {
-        if (postType.equals("text")) {
-            return postMapper.readTextPost(postId);
-        } else if (postType.equals("photo")) {
-            return postMapper.readPhotoPost(postId);
-        }else {
-            throw new IllegalArgumentException("exception --- from :: readRost ----");
-        }
+        return switch (postType){
+            case "text" -> postMapper.readTextPost(postId);
+            case "photo" -> {
+                yield  postMapper.readPhotoPost(postId);
+            }
+            default -> throw new IllegalArgumentException("exception --- from :: readRost ----");
+        };
     }
 
 

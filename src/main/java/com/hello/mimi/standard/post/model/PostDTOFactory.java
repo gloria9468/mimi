@@ -1,7 +1,10 @@
 package com.hello.mimi.standard.post.model;
 
 
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -13,17 +16,23 @@ import java.util.List;
 import java.util.UUID;
 
 // 팩토리 메서드
+@Component
 public class PostDTOFactory {
+//    @Value("${file-store-path}")
+//    private String fStorePath;
+
+    public static String fileStorePath;
+
 
     public static PostDTO createPostDTO(String type) {
-        if ("text".equals(type)) {
-            return new TextPostDTO();
-        } else if ("photo".equals(type)) {
-            return new PhotoPostDTO();
-        } else {
-            throw new IllegalArgumentException("Unknown type: " + type);
-
-        }
+        return switch (type) {
+            case "text" -> new TextPostDTO();
+            case "photo" -> {
+                PhotoPostDTO photoPostDTO = new PhotoPostDTO();
+                yield photoPostDTO;
+            }
+            default -> throw new IllegalArgumentException("Unknown type: " + type);
+        };
     }
 
     public static PhotoPostDTO makePhotoDir(PhotoPostDTO photoPostDTO) throws IOException {
@@ -32,7 +41,7 @@ public class PostDTOFactory {
             throw new IllegalArgumentException("No files to upload");
         }
 
-        String realPath = "/Users/hyun/study/mimi-file-store";
+        String realPath = fileStorePath;
         String today = new SimpleDateFormat("yyMMdd").format(new Date());
         File folder = new File(realPath, today);
         if (!folder.exists()) {
@@ -72,7 +81,6 @@ public class PostDTOFactory {
     }
 
 
-
     public static Object convertPostDTO(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
             TextPostDTO textPostDTO = (TextPostDTO) postDTO;
@@ -80,11 +88,10 @@ public class PostDTOFactory {
         } else if (postDTO instanceof PhotoPostDTO) {
             PhotoPostDTO photoPostDTO = (PhotoPostDTO) postDTO;
             return photoPostDTO;
-        }else {
+        } else {
             throw new IllegalArgumentException("cannot convert PostDTO Instance");
         }
     }
-
 
 
 }

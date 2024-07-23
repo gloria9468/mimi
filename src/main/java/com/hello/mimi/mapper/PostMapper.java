@@ -34,8 +34,7 @@ public interface PostMapper {
             @Result(column="post_id", property="postId"),
             @Result(column="title", property="title"),
             @Result(column="post_type", property="postType"),
-            @Result(property="fileInfos", column="post_id",
-                    many=@Many(select="selectPostPhotos"))
+            @Result(property="fileInfos", column="post_id", many=@Many(select="selectPostPhotos"))
     })
     PhotoPostDTO readPhotoPost(@Param("postId") Long postId);
 

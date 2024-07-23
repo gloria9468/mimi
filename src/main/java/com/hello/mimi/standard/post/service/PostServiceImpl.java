@@ -2,6 +2,7 @@ package com.hello.mimi.standard.post.service;
 
 import com.hello.mimi.standard.post.service.repository.PostDAO;
 import com.hello.mimi.standard.post.model.PostDTO;
+import com.hello.mimi.vo.FilePathMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostDTO readPost(String postType, Long postId) {
+
+
         return postDAO.readPost(postType, postId);
     }
 
