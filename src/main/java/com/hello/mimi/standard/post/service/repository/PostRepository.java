@@ -1,6 +1,6 @@
 package com.hello.mimi.standard.post.service.repository;
 
-import com.hello.mimi.mapper.PostMapper;
+import com.hello.mimi.mapper.h2.PostMapper;
 import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.util.SearchFilter;
 import lombok.RequiredArgsConstructor;
@@ -11,17 +11,14 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class MybatisPostRepository implements PostDAO {
-
+public class PostRepository {
     @Autowired
     private final PostMapper postMapper;
 
-    @Override
     public List<PostDTO> postListByFilter(SearchFilter searchFilter){
         return postMapper.postListByFilter(searchFilter);
     }
 
-    @Override
     public PostDTO readPost(String postType, Long postId) {
         return switch (postType){
             case "text" -> postMapper.readTextPost(postId);
@@ -33,7 +30,6 @@ public class MybatisPostRepository implements PostDAO {
     }
 
 
-    @Override
     public int createPost(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
             return postMapper.insertTextPost((TextPostDTO) postDTO);
@@ -47,7 +43,6 @@ public class MybatisPostRepository implements PostDAO {
         }
     }
 
-    @Override
     public int updatePost(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
             return postMapper.updateTextPost((TextPostDTO) postDTO);
@@ -58,7 +53,6 @@ public class MybatisPostRepository implements PostDAO {
         }
     }
 
-    @Override
     public int deletePost(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
             return postMapper.deleteTextPost((TextPostDTO) postDTO);
@@ -68,6 +62,4 @@ public class MybatisPostRepository implements PostDAO {
             throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
         }
     }
-
-
 }

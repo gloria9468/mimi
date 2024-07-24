@@ -1,21 +1,21 @@
 package com.hello.mimi;
 
-import com.hello.mimi.standard.post.model.PhotoPostDTO;
-import com.hello.mimi.standard.post.model.PostDTO;
-import com.hello.mimi.vo.FilePathMaker;
-import groovy.util.logging.Slf4j;
-import lombok.RequiredArgsConstructor;
+import com.hello.mimi.util.vo.FilePathMaker;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
 
 @Configuration
+// @PropertySource("classpath:application.properties") // 없어도 됨.
 public class WebConfig {
+    @Value("${file-store-path}")
+    private String fStorePath;
+
     @Bean
     public SessionLocaleResolver localeResolver() {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
@@ -23,10 +23,10 @@ public class WebConfig {
         return localeResolver;
     }
 
-//    @Bean
-//    public FilePathMaker filePathMaker() {
-//        FilePathMaker filePathMaker = new FilePathMaker();
-//        System.out.println("bean filepathMaker address ===="+filePathMaker);
-//        return filePathMaker;
-//    }
+    @Bean
+    public FilePathMaker filePathMaker() {
+        FilePathMaker filePathMaker = new FilePathMaker(fStorePath);
+        System.out.println("bean filepathMaker address ===="+filePathMaker);
+        return filePathMaker;
+    }
 }

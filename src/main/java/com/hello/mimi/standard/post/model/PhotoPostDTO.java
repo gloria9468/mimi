@@ -1,7 +1,6 @@
 package com.hello.mimi.standard.post.model;
 
 import com.hello.mimi.WebConfig;
-import com.hello.mimi.vo.FilePathMaker;
 import jakarta.annotation.PostConstruct;
 import lombok.Builder;
 import lombok.Getter;

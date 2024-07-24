@@ -1,6 +1,9 @@
-package com.hello.mimi.mapper;
+package com.hello.mimi.mapper.h2;
 
-import com.hello.mimi.standard.post.model.*;
+import com.hello.mimi.standard.post.model.FileInfo;
+import com.hello.mimi.standard.post.model.PhotoPostDTO;
+import com.hello.mimi.standard.post.model.PostDTO;
+import com.hello.mimi.standard.post.model.TextPostDTO;
 import com.hello.mimi.util.SearchFilter;
 import org.apache.ibatis.annotations.*;
 
@@ -27,7 +30,7 @@ public interface PostMapper {
     @Select("SELECT post_id, title, body, post_type, status FROM post WHERE post_id = #{postId}")
     TextPostDTO readTextPost(@Param("postId") Long postId);
 
-    @Select("SELECT p.post_id, p.title, p.post_type, p.status " +
+    @Select("SELECT p.post_id, p.title, p.post_type, 'h2test' as status " +
             "FROM post p " +
             "WHERE p.post_id = #{postId}")
     @Results({

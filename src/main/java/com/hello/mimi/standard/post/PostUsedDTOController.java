@@ -1,36 +1,27 @@
 package com.hello.mimi.standard.post;
 
-import com.hello.mimi.WebConfig;
 import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.standard.post.service.PostService;
-import com.hello.mimi.util.BeanManager;
+import com.hello.mimi.util.bean.BeanManager;
 import com.hello.mimi.util.PostTypeEnum;
-import com.hello.mimi.vo.FilePathMaker;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
+import com.hello.mimi.util.vo.FilePathMaker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.w3c.dom.ls.LSOutput;
 
-import java.beans.PropertyEditorSupport;
 import java.io.IOException;
-
-import static java.awt.SystemColor.text;
 
 @Controller
 @RequestMapping("/post")
 public class PostUsedDTOController {
     @Autowired
     PostService postService;
+
+    @Autowired
+    FilePathMaker filePathMaker;
 
 
 
@@ -49,7 +40,7 @@ public class PostUsedDTOController {
         System.out.println( "getFileStorePath ---" + ((PhotoPostDTO) postDTO).getFileStorePath("hyuna"));
 
         //TODO 삭제 요망
-        FilePathMaker filePathMaker = (FilePathMaker) BeanManager.getBean("FilePathMaker");
+        FilePathMaker filePathMakerTest = (FilePathMaker) BeanManager.getBean("filePathMaker");
         System.out.println("filePathMaker ===== "+ filePathMaker);
         System.out.println("filePath url ==== "+ filePathMaker.makeFilePath("test!!!"));
 

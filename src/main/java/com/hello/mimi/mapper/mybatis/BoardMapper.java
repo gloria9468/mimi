@@ -1,4 +1,4 @@
-package com.hello.mimi.mapper;
+package com.hello.mimi.mapper.mybatis;
 
 import com.hello.mimi.standard.post.model.PhotoPostDTO;
 import com.hello.mimi.standard.post.model.PostDTO;
