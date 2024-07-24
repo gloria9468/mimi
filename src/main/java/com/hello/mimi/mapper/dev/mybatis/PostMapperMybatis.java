@@ -1,5 +1,6 @@
-package com.hello.mimi.mapper.mybatis;
+package com.hello.mimi.mapper.dev.mybatis;
 
+import com.hello.mimi.mapper.PostActiveMapper;
 import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.util.SearchFilter;
 import org.apache.ibatis.annotations.*;
@@ -7,8 +8,8 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 
-//@Mapper
-public interface PostMapper {
+@Mapper
+public interface PostMapperMybatis extends PostActiveMapper {
     @Select("<script>" +
             "SELECT p.post_id, p.title, p.post_type, p.reg_date " +
             "FROM post p " +

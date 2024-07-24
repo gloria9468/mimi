@@ -1,4 +1,4 @@
-package com.hello.mimi;
+package com.hello.mimi.util.config;
 
 import com.hello.mimi.util.vo.FilePathMaker;
 import org.springframework.beans.factory.annotation.Value;

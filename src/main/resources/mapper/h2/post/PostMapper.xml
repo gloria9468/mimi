@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.hello.mimi.mapper.mybatis.PostMapper">
+<mapper namespace="com.hello.mimi.mapper.dev.mybatis.PostMapperMybatis">
     <select id="readPost" resultType="com.hello.mimi.standard.post.model.PostDTO">
         select post_id, title, body
         from post

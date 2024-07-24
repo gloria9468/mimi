@@ -1,29 +1,31 @@
 package com.hello.mimi.standard.post.service.repository;
 
-import com.hello.mimi.mapper.h2.PostMapper;
+import com.hello.mimi.mapper.PostActiveMapper;
 import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.util.SearchFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
-public class PostRepository {
-    @Autowired
-    private final PostMapper postMapper;
+@RequiredArgsConstructor // @Autowired 안 써도 됨.
+public class PostRepository{
+    private final PostActiveMapper postActiveMapper;
+    // application.properties 에 맞춰서 알아서 Mapper로 받아서 돌음.
+    // 빨간 밑줄 괜찮음. // @Qualifier 안해도 됨.
 
     public List<PostDTO> postListByFilter(SearchFilter searchFilter){
-        return postMapper.postListByFilter(searchFilter);
+        return postActiveMapper.postListByFilter(searchFilter);
     }
 
     public PostDTO readPost(String postType, Long postId) {
         return switch (postType){
-            case "text" -> postMapper.readTextPost(postId);
+            case "text" -> postActiveMapper.readTextPost(postId);
             case "photo" -> {
-                yield  postMapper.readPhotoPost(postId);
+                yield  postActiveMapper.readPhotoPost(postId);
             }
             default -> throw new IllegalArgumentException("exception --- from :: readRost ----");
         };
@@ -32,12 +34,12 @@ public class PostRepository {
 
     public int createPost(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
-            return postMapper.insertTextPost((TextPostDTO) postDTO);
+            return postActiveMapper.insertTextPost((TextPostDTO) postDTO);
         } else if (postDTO instanceof PhotoPostDTO) {
             for( FileInfo fInfo : ((PhotoPostDTO) postDTO).getFileInfos() ) {
                 System.out.println(fInfo.toString());
             }
-            return postMapper.insertPhotoPost((PhotoPostDTO) postDTO);
+            return postActiveMapper.insertPhotoPost((PhotoPostDTO) postDTO);
         }else {
             throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
         }
@@ -45,9 +47,9 @@ public class PostRepository {
 
     public int updatePost(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
-            return postMapper.updateTextPost((TextPostDTO) postDTO);
+            return postActiveMapper.updateTextPost((TextPostDTO) postDTO);
         } else if (postDTO instanceof PhotoPostDTO) {
-            return postMapper.updatePhotoPost((PhotoPostDTO) postDTO);
+            return postActiveMapper.updatePhotoPost((PhotoPostDTO) postDTO);
         }else {
             throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
         }
@@ -55,9 +57,9 @@ public class PostRepository {
 
     public int deletePost(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
-            return postMapper.deleteTextPost((TextPostDTO) postDTO);
+            return postActiveMapper.deleteTextPost((TextPostDTO) postDTO);
         } else if (postDTO instanceof PhotoPostDTO) {
-            return postMapper.deletePhotoPost((PhotoPostDTO) postDTO);
+            return postActiveMapper.deletePhotoPost((PhotoPostDTO) postDTO);
         }else {
             throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
         }

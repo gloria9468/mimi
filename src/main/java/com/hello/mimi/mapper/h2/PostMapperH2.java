@@ -1,5 +1,6 @@
 package com.hello.mimi.mapper.h2;
 
+import com.hello.mimi.mapper.PostActiveMapper;
 import com.hello.mimi.standard.post.model.FileInfo;
 import com.hello.mimi.standard.post.model.PhotoPostDTO;
 import com.hello.mimi.standard.post.model.PostDTO;
@@ -11,7 +12,7 @@ import java.util.List;
 
 
 @Mapper
-public interface PostMapper {
+public interface PostMapperH2 extends PostActiveMapper{
     @Select("<script>" +
             "SELECT p.post_id, p.title, p.post_type, p.reg_date " +
             "FROM post p " +
