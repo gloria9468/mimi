@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
+<th:block layout:fragment="content">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title layout:fragment="title">--네이버지도.</title>
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zd6h8polwu"></script>
+</head>
+<body>
+<div id="map" style="width:100%;height:400px;"></div>
+<div id="searchResult">
+    <div id="resultItem" style="display: none;">
+        <div id="title"></div>
+        <div id="roadAddress"></div>
+        <div id="mapx"></div>
+        <div id="mapy"></div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var searchResult = {
+        "lastBuildDate": "Fri, 26 Jul 2024 13:01:28 +0900",
+        "total": 5,
+        "start": 1,
+        "display": 5,
+        "items": [
+            {
+                "title": "<b>초원</b>웰빙한식뷔페",
+                "link": "",
+                "category": "음식점>한식뷔페",
+                "description": "",
+                "telephone": "",
+                "address": "세종특별자치시 소정면 운당리 132-4",
+                "roadAddress": "세종특별자치시 소정면 운당9길 58",
+                "mapx": "1271510589",
+                "mapy": "366993721"
+            },
+            {
+                "title": "<b>초원</b>삼계탕",
+                "link": "",
+                "category": "한식>백숙,삼계탕",
+                "description": "",
+                "telephone": "",
+                "address": "세종특별자치시 나성동 206 B동 402호",
+                "roadAddress": "세종특별자치시 나성로 38 B동 402호",
+                "mapx": "1272639492",
+                "mapy": "364838645"
+            },
+            {
+                "title": "<b>초원</b>분식",
+                "link": "",
+                "category": "분식>종합분식",
+                "description": "",
+                "telephone": "",
+                "address": "세종특별자치 조치원읍 상리 18-4",
+                "roadAddress": "세종특별자치 조치원읍 조치원9길 6",
+                "mapx": "1273030917",
+                "mapy": "366026140"
+            },
+            {
+                "title": "<b>초원</b>갈비",
+                "link": "",
+                "category": "음식점>한식",
+                "description": "",
+                "telephone": "",
+                "address": "세종특별자치시 금남면 용포리 350-10",
+                "roadAddress": "세종특별자치시 금남면 용포2길 47",
+                "mapx": "1272776469",
+                "mapy": "364633980"
+            },
+            {
+                "title": "<b>초원</b>식당",
+                "link": "https://blog.naver.com/dnswntks3858",
+                "category": "음식점>한식",
+                "description": "",
+                "telephone": "",
+                "address": "세종특별자치시 전의면 읍내리 126-1",
+                "roadAddress": "세종특별자치시 전의면 운주산로 1254",
+                "mapx": "1271978897",
+                "mapy": "366803046"
+            }
+        ]
+    }
+
+    $().ready(function () {
+        getSearchData();
+    });
+
+
+    function deepClone(idNum, item){
+        var title = item.title;
+        var roadAddress = item.roadAddress;
+        var mapx = item.mapx;
+        var mapy = item.mapy;
+
+        const resultItemDiv = document.getElementById("resultItem");
+        const newNode = resultItemDiv.cloneNode(true);
+        newNode.id = "resultItem" + idNum;
+
+
+        Array.from(newNode.children).forEach((childNode) => {
+            var childNodeId = childNode.id;
+            childNode.innerHTML = eval(childNodeId);
+        });
+        resultItemDiv.before(newNode);
+    }
+    function getSearchData(){
+        var items = searchResult.items;
+        var itemsLength = items.length;
+
+        for(var i in items){
+            deepClone( i, items[i] );
+        }
+    }
+
+    var position = new naver.maps.LatLng(37.3595704, 127.105399);
+    var map = new naver.maps.Map('map', {
+        center: position,
+        zoom: 15
+    });
+
+    var marker = new naver.maps.Marker({
+        position: position,
+        map: map
+    });
+
+    naver.maps.Event.addListener(map, 'click', function(e) {
+        marker.setPosition(e.latlng);
+        var y_lat = (e.latlng)._lat;
+        var x_lng = (e.latlng)._lng;
+        console.log(y_lat + "--- " + x_lng);
+
+    });
+
+</script>
+</body>
+</th:block>
+</html>
