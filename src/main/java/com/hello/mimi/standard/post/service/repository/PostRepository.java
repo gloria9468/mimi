@@ -21,16 +21,14 @@ public class PostRepository{
         return postActiveMapper.postListByFilter(searchFilter);
     }
 
-    public PostDTO readPost(String postType, Long postId) {
+    public PostDTO readPost(PostDTO postDTO) {
+        String postType = postDTO.getPostType();
         return switch (postType){
-            case "text" -> postActiveMapper.readTextPost(postId);
-            case "photo" -> {
-                yield  postActiveMapper.readPhotoPost(postId);
-            }
+            case "text" -> postActiveMapper.readTextPost(postDTO);
+            case "photo" -> postActiveMapper.readPhotoPost(postDTO);
             default -> throw new IllegalArgumentException("exception --- from :: readRost ----");
         };
     }
-
 
     public int createPost(PostDTO postDTO) {
         if (postDTO instanceof TextPostDTO) {
@@ -64,4 +62,7 @@ public class PostRepository{
             throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
         }
     }
+
+
+
 }

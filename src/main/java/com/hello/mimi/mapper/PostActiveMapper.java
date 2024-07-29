@@ -12,8 +12,8 @@ public interface PostActiveMapper {
     int insertPhotoPost(PostDTO postDTO);
 
 
-    PostDTO readTextPost(Long postId);
-    PostDTO readPhotoPost(Long postId);
+    PostDTO readTextPost(PostDTO postDTO);
+    PostDTO readPhotoPost(PostDTO postDTO);
 
 
     int updateTextPost(PostDTO postDTO);
@@ -25,5 +25,6 @@ public interface PostActiveMapper {
 
 
     List<PostDTO> postListByFilter(SearchFilter searchFilter);
+
 
 }

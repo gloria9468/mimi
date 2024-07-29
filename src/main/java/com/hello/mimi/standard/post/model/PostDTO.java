@@ -21,6 +21,11 @@ public class PostDTO {
     public PostDTO() {
     }
 
+    public PostDTO(String title, String postType) {
+        this.title = title;
+        this.postType = postType;
+    }
+
     @Override
     public String toString() {
         return "PostDTO{" +

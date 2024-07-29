@@ -1,6 +1,8 @@
 package com.hello.mimi.standard.post.model;
 
 
+import com.hello.mimi.util.bean.BeanManager;
+import com.hello.mimi.util.vo.FilePathMaker;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +20,15 @@ import java.util.UUID;
 // 팩토리 메서드
 @Component
 public class PostDTOFactory {
-//    @Value("${file-store-path}")
-//    private String fStorePath;
+    @Autowired
+    FilePathMaker filePathMaker;
 
     public static String fileStorePath;
+
+    public PostDTOFactory(FilePathMaker filePathMaker) {
+        this.filePathMaker = filePathMaker;
+        fileStorePath = filePathMaker.makeFilePath("");
+    }
 
 
     public static PostDTO createPostDTO(String type) {
@@ -40,6 +47,7 @@ public class PostDTOFactory {
         if (files == null || files.isEmpty()) {
             throw new IllegalArgumentException("No files to upload");
         }
+
 
         String realPath = fileStorePath;
         String today = new SimpleDateFormat("yyMMdd").format(new Date());

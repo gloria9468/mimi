@@ -28,6 +28,10 @@
 </script>
 <body>
     <form id="postCreateForm" action="detail.html" th:action method="post" enctype="multipart/form-data">
+        <div th:utext="${placeDTO.title}"></div>
+        <div th:text="${placeDTO.roadAddress}"></div>
+        <div th:text="${placeDTO.mapx}"></div>
+        <div th:text="${placeDTO.mapy}"></div>
         <div style="display: flex; gap:15px;">
             <div>포스팅 타입</div>
             <div class="form-check" th:each="postType : ${postTypeEnum}">

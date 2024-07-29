@@ -17,8 +17,9 @@ public class PhotoPostDTO extends PostDTO{
 
     private String fileStorePath;
 
+
     public PhotoPostDTO() {
-        System.out.println("PhotoPostDTO() ---..--- fileStorePath = " + fileStorePath);
+
     }
 
     @Override
@@ -26,7 +27,13 @@ public class PhotoPostDTO extends PostDTO{
         return "photo";
     }
 
-    public String getFileStorePath(String additionalPath) {
-        return null;
+    @Override
+    public String toString() {
+        return "PhotoPostDTO{" +
+                "postPhotoId=" + postPhotoId +
+                ", multipartFiles=" + multipartFiles +
+                ", fileInfos=" + fileInfos +
+                ", fileStorePath='" + fileStorePath + '\'' +
+                '}';
     }
 }

@@ -11,14 +11,16 @@
     <title layout:fragment="title">--네이버지도.</title>
     <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zd6h8polwu"></script>
 </head>
+<style>
+    .searchResult .resultItem{border:1px solid mediumpurple;}
+</style>
 <body>
 <div id="map" style="width:100%;height:400px;"></div>
-<div id="searchResult">
-    <div id="resultItem" style="display: none;">
+<div class="searchResult">
+    <div id="defaultItemDiv">
         <div id="title"></div>
         <div id="roadAddress"></div>
-        <div id="mapx"></div>
-        <div id="mapy"></div>
+        <input type="button" class="w-10 btn btn-primary btn-sm" value="리뷰작성"/>
     </div>
 </div>
 <script type="text/javascript" th:inline="javascript">
@@ -94,13 +96,18 @@
     function deepClone(idNum, item){
         var title = item.title;
         var roadAddress = item.roadAddress;
-        var mapx = item.mapx;
-        var mapy = item.mapy;
+        var mapx = (item.mapx).toString().replace(/^(\d{3})(\d+)/, '$1.$2');
+        var mapy = (item.mapy).toString().replace(/^(\d{2})(\d+)/, '$1.$2');
 
-        const resultItemDiv = document.getElementById("resultItem");
+        const resultItemDiv = document.getElementById("defaultItemDiv");
         const newNode = resultItemDiv.cloneNode(true);
-        newNode.id = "resultItem" + idNum;
-
+        newNode.id = "resultItem"+ idNum;
+        newNode.className = "resultItem";
+        //newNode.setAttribute("data-mapx", mapx);
+        //newNode.setAttribute("data-mapy", mapy);
+        newNode.onclick = () => { setMapPosition(mapy, mapx); };
+        const reviewBtnNode = newNode.querySelector("input[type=button]");
+        reviewBtnNode.onclick = () => { getCreatePost(item); };
 
         Array.from(newNode.children).forEach((childNode) => {
             var childNodeId = childNode.id;
@@ -108,16 +115,41 @@
         });
         resultItemDiv.before(newNode);
     }
+
+    function getCreatePost(item){
+        var url = "/post/getCreatePost";
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = url;
+
+        // JSON 데이터를 form 데이터로 변환
+        for (const key in item) {
+            if (item.hasOwnProperty(key)) {
+                const hiddenField = document.createElement("input");
+                hiddenField.type = "hidden";
+                hiddenField.name = key;
+                hiddenField.value = item[key];
+                form.appendChild(hiddenField);
+            }
+        }
+
+        // form을 문서에 추가하고 제출
+        document.body.appendChild(form);
+        form.submit();
+    }
+
     function getSearchData(){
         var items = searchResult.items;
         var itemsLength = items.length;
-
+        $(".resultItem").remove();
         for(var i in items){
             deepClone( i, items[i] );
         }
+        $("#defaultItemDiv").css("display", "none");
     }
 
-    var position = new naver.maps.LatLng(37.3595704, 127.105399);
+
+    var position = new naver.maps.LatLng(36.5046874, 127.2654148);
     var map = new naver.maps.Map('map', {
         center: position,
         zoom: 15
@@ -132,10 +164,28 @@
         marker.setPosition(e.latlng);
         var y_lat = (e.latlng)._lat;
         var x_lng = (e.latlng)._lng;
-        console.log(y_lat + "--- " + x_lng);
 
+        console.log(y_lat + "--...- " + x_lng);
+
+
+        setMapPosition(y_lat, x_lng);
     });
 
+    function setMapPosition(y_lat, x_lng) {
+        console.log("setMapPosition---", y_lat, x_lng);
+        position = new naver.maps.LatLng(y_lat, x_lng);
+        map = new naver.maps.Map('map', {
+            center: position,
+            zoom: 18
+        });
+
+        marker = new naver.maps.Marker({
+            position: position,
+            map: map
+        });
+
+
+    }
 </script>
 </body>
 </th:block>

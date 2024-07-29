@@ -26,7 +26,7 @@ public interface PostMapperMybatis extends PostActiveMapper {
     List<PostDTO> postListByFilter(SearchFilter searchFilter);
 
     @Select("SELECT post_id, title, body, post_type, status FROM post WHERE post_id = #{postId}")
-    TextPostDTO readTextPost(@Param("postId") Long postId);
+    TextPostDTO readTextPost(PostDTO postDTO);
 
     @Select("SELECT p.post_id, p.title, p.post_type, p.status " +
             "FROM post p " +
@@ -37,7 +37,8 @@ public interface PostMapperMybatis extends PostActiveMapper {
             @Result(column="post_type", property="postType"),
             @Result(property="fileInfos", column="post_id", many=@Many(select="selectPostPhotos"))
     })
-    PhotoPostDTO readPhotoPost(@Param("postId") Long postId);
+    PhotoPostDTO readPhotoPost(PostDTO postDTO);
+
 
     @Select("SELECT save_folder, origin_file_name, save_file FROM post_photo_info WHERE post_id = #{postId}")
     List<FileInfo> selectPostPhotos(Long postId);
@@ -49,11 +50,11 @@ public interface PostMapperMybatis extends PostActiveMapper {
 
     @Insert("<script>" +
             "INSERT INTO post_photo_info (post_id, save_folder, origin_file_name, save_file) VALUES " +
-            "<foreach collection='postDTO.fileInfos' item='fileinfo' separator=' , '>" +
-                "(#{postDTO.postId}, #{fileinfo.saveFolder}, #{fileinfo.originFileName}, #{fileinfo.saveFile})" +
+            "<foreach collection='fileInfos' item='fileinfo' separator=' , '>" +
+                "(#{postId}, #{fileinfo.saveFolder}, #{fileinfo.originFileName}, #{fileinfo.saveFile})" +
 		    "</foreach>" +
             "</script>")
-    int insertPhotoPost(@Param("postDTO") PhotoPostDTO postDTO);
+    int insertPhotoPost(PhotoPostDTO postDTO);
 
     @Update("UPDATE post SET title = #{title}, body = #{body} WHERE post_id = #{postId}")
     int updateTextPost(TextPostDTO postDTO);

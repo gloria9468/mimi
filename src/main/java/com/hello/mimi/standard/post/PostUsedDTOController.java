@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -20,8 +21,6 @@ public class PostUsedDTOController {
     @Autowired
     PostService postService;
 
-    @Autowired
-    FilePathMaker filePathMaker;
 
 
 
@@ -34,20 +33,9 @@ public class PostUsedDTOController {
 
     @GetMapping("/{postId}")
     public String readPost(@ModelAttribute("postDTO") PostDTO postDTO, @PathVariable Long postId, Model model) {
-        String postType = postDTO.getPostType();
-        postDTO = postService.readPost(postType, postId);
-        System.out.println( "mapping hashCode() ---" + postDTO.hashCode() );
-        System.out.println( "getFileStorePath ---" + ((PhotoPostDTO) postDTO).getFileStorePath("hyuna"));
+        postDTO = postService.readPost(postDTO);
 
-        //TODO 삭제 요망
-        FilePathMaker filePathMakerTest = (FilePathMaker) BeanManager.getBean("filePathMaker");
-        System.out.println("filePathMaker ===== "+ filePathMaker);
-        System.out.println("filePath url ==== "+ filePathMaker.makeFilePath("test!!!"));
-
-        //Object postDTOInstance = PostDTOFactory.convertPostDTO(postDTO);
-        //model.addAttribute("postDTO", postDTOInstance);
         model.addAttribute("postDTO", postDTO);
-
         return "post/detail";
     }
 
@@ -55,7 +43,7 @@ public class PostUsedDTOController {
     public String updatePostForm(@PathVariable Long postId, @ModelAttribute("postDTO") PostDTO postDTO, Model model) {
         postDTO.setPostId(postId);
         String postType = postDTO.getPostType();
-        postDTO = postService.readPost(postType, postId);
+        postDTO = postService.readPost(postDTO);
         PostTypeEnum[] postTypeEnum = PostTypeEnum.values();
 
         model.addAttribute("postTypeEnum", postTypeEnum);
@@ -68,14 +56,12 @@ public class PostUsedDTOController {
         System.out.println( postDTO.hashCode() );
 
         if (postDTO instanceof PhotoPostDTO) {
-            PostDTO pDTO = new TextPostDTO();
-            pDTO.setTitle( postDTO.getTitle() );
-            pDTO.setPostType( postDTO.getPostType() );
+            PostDTO pDTO = new PostDTO(postDTO.getTitle(), postDTO.getPostType());
 
-            int createTextPostCnt = postService.createPost( pDTO );
-            System.out.println("createTextPostCnt-----" + createTextPostCnt);
+            int createTextPostCnt = postService.createPost( (TextPostDTO) pDTO );
             postDTO.setPostId(pDTO.getPostId());
-            postDTO = PostDTOFactory.makePhotoDir((PhotoPostDTO) postDTO);
+            PostDTOFactory.makePhotoDir((PhotoPostDTO) postDTO);
+            int createPhotoPostCnt = postService.createPost(postDTO);
         } else if (postDTO instanceof TextPostDTO) {
             int createCnt = postService.createPost(postDTO);
         }

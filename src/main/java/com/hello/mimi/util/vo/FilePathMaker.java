@@ -14,7 +14,6 @@ public class FilePathMaker {
     }
 
     public String makeFilePath(String additionalPath) {
-        System.out.println("fStorePath = " + fStorePath);
         return fStorePath + additionalPath;
     }
 }
