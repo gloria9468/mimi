@@ -1,42 +1,85 @@
 package com.hello.mimi.standard.post.service;
 
+import com.hello.mimi.mapper.PostActiveMapper;
 import com.hello.mimi.standard.post.model.PhotoPostDTO;
 import com.hello.mimi.standard.post.model.PostDTO;
-import com.hello.mimi.standard.post.service.repository.PostRepository;
-import com.hello.mimi.util.bean.BeanManager;
+import com.hello.mimi.standard.post.model.PostDTOFactory;
+import com.hello.mimi.standard.post.model.TextPostDTO;
+import com.hello.mimi.util.SearchFilter;
 import com.hello.mimi.util.vo.FilePathMaker;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor // @Autowired 안 써도 됨.
 public class PostService{
-    @Autowired
-    PostRepository postRepository;
+    //@Autowired
+    //PostRepository postRepository;
 
-    @Autowired
-    FilePathMaker filePathMaker;
+    private final PostActiveMapper postActiveMapper;
+    // application.properties 에 맞춰서 알아서 Mapper로 받아서 돌음.
+    // 빨간 밑줄 괜찮음. // @Qualifier 안해도 됨.
 
+    private final FilePathMaker filePathMaker;
 
-    public int createPost(PostDTO postDTO) {
-        return postRepository.createPost(postDTO);
+    public List<PostDTO> postListByFilter(SearchFilter searchFilter){
+        return postActiveMapper.postListByFilter(searchFilter);
+    }
+
+    public void createPost(PostDTO postDTO) throws IOException {
+        if (postDTO instanceof PhotoPostDTO) {
+            PostDTO pDTO = postDTO.makePostDTO(postDTO.getTitle(), postDTO.getPostType());
+
+            int createTextPostCnt = postActiveMapper.insertPost( pDTO );
+            if(createTextPostCnt > 0) {
+                postDTO.setPostId(pDTO.getPostId());
+                PostDTOFactory.makePhotoDir((PhotoPostDTO) postDTO);
+                int createPhotoPostCnt = postActiveMapper.insertPhotoPost(postDTO);
+            }
+        } else if (postDTO instanceof TextPostDTO) {
+            int createCnt = postActiveMapper.insertTextPost(postDTO);
+        }
     }
 
     public PostDTO readPost(PostDTO postDTO) {
         String postType = postDTO.getPostType();
-        postDTO = postRepository.readPost(postDTO);
-        if(postDTO instanceof PhotoPostDTO){
-            String fileStorePath = filePathMaker.makeFilePath("");
-            ((PhotoPostDTO) postDTO).setFileStorePath(fileStorePath);
-        }
+        postDTO = switch (postType){
+            case "text" -> postActiveMapper.readTextPost(postDTO);
+            case "photo" -> {
+                yield postActiveMapper.readPhotoPost(postDTO);
+                /*
+                String fileStorePath = filePathMaker.makeFilePath("");
+
+                ((PhotoPostDTO) postDTO).setFileStorePath(fileStorePath);
+                yield (PhotoPostDTO) postDTO;
+                 */
+            }
+            default -> throw new IllegalArgumentException("exception --- from :: readRost ----");
+        };
         return postDTO;
     }
 
     public int updatePost(PostDTO postDTO) {
-        return postRepository.updatePost(postDTO);
+        if (postDTO instanceof TextPostDTO) {
+            return postActiveMapper.updateTextPost((TextPostDTO) postDTO);
+        } else if (postDTO instanceof PhotoPostDTO) {
+            return postActiveMapper.updatePhotoPost((PhotoPostDTO) postDTO);
+        }else {
+            throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
+        }
     }
 
     public int deletePost(PostDTO postDTO) {
-        return postRepository.deletePost(postDTO);
+        if (postDTO instanceof TextPostDTO) {
+            return postActiveMapper.deleteTextPost((TextPostDTO) postDTO);
+        } else if (postDTO instanceof PhotoPostDTO) {
+            return postActiveMapper.deletePhotoPost((PhotoPostDTO) postDTO);
+        }else {
+            throw new IllegalArgumentException("Unknown instance --> postMapper 에 갈 수 없다.");
+        }
     }
 
 

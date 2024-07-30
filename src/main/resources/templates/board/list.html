@@ -41,43 +41,94 @@
     </style>
 <body>
     <div style="height: 50px;">
+        <p class="btn btn-warning btn-sm" style="width: 100px; float: left;" th:text="|${filter.totalCnt} 건|"></p>
         <button type="button" class="btn btn-primary" style="width: 100px; float: right;" th:onclick="|location.href='@{/post/create}'|">글쓰기</button>
     </div>
     <form action="/board/list" method="post" >
-    <div style="display: flex;">
-        <select class="form-select" name="cntPerPage" style="width: 80px;" th:onchange="|$('form').submit();|">
-            <option th:each="cntPerPage : ${cntPerPageEnum}"
-                    th:value="${cntPerPage.cntPerPage}"
-                    th:text="${cntPerPage.displayName}"
-                    th:selected="${cntPerPage.cntPerPage} == ${filter?.cntPerPage}">
-            </option>
-        </select>
-        <input type="text" name="title" class="form-control" id="title"  placeholder="제목을 작성해주세요." th:value="${filter?.title}"/>
-        <button type="submit" class="btn btn-outline-success" style="width: 100px;">검색</button>
-    </div>
+        <div style="display: flex;">
+            <select class="form-select" name="cntPerPage" style="width: 80px;" th:onchange="|$('form').submit();|">
+                <option th:each="cntPerPage : ${cntPerPageEnum}"
+                        th:value="${cntPerPage.cntPerPage}"
+                        th:text="${cntPerPage.displayName}"
+                        th:selected="${cntPerPage.cntPerPage} == ${filter?.cntPerPage}">
+                </option>
+            </select>
+            <select class="form-select" name="postType" style="width: 80px;" th:onchange="|$('form').submit();|">
+                <option th:value="null">전체</option>
+                <option th:each="postType : ${postTypeEnum}"
+                        th:value="${postType.postType}"
+                        th:text="${postType.displayName}"
+                        th:selected="${postType.postType} == ${filter?.postType}">
+                </option>
+            </select>
+            <input type="text" name="title" class="form-control" id="title"  placeholder="제목을 작성해주세요." th:value="${filter?.title}"/>
+            <button type="submit" class="btn btn-outline-success" style="width: 100px;">검색</button>
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col" th:text="#{board.title}">제목</th>
+                <th scope="col" th:text="#{board.postType}">포스팅 타입</th>
+                <th scope="col" th:text="#{board.regDate}">등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="board : ${boardList}">
+                <tr th:onclick="|location.href='@{/post/{postId}(postId=${board.postId},postType=${board.postType})}'|">
+
+                <td th:text="${board.postId}">아이디</td>
+                <td th:text="${board.title}">타이틀</td>
+                <td th:text="${board.postType}">타입</td>
+                <td th:text="${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}">등록일</td>
+            </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+        <div class="container mt-5">
+
+            <nav>
+                <ul class="pagination" style="justify-content: center;">
+                    <li class="page-item">
+                        <a class="page-link" style="padding: 0.275rem 0.55rem;">
+                            <span aria-hidden="true">
+                                <input type="submit" th:name="pageIndex" th:value="1"/>
+                                &laquo;
+                            </span>
+                        </a>
+                    </li>
+
+                    <th:block th:each="i : ${#numbers.sequence(filter.pageUnitStart, filter.pageUnitEnd)}">
+                    <li class="page-item">
+                        <input type="submit" th:name="pageIndex" th:classappend="${filter.pageIndex == i} ? 'btn-primary' : 'page-link'" class="btn" th:value="${i}"/>
+                    </li>
+                    </th:block>
+
+                    <li class="page-item">
+                        <a class="page-link" style="padding: 0.275rem 0.55rem;">
+                            <span aria-hidden="true">
+                                <input type="submit" th:name="pageIndex" th:value="${filter.pageUnitTotal}"/>
+                                &raquo;
+                            </span>
+                        </a>
+                    </li>
+                    <li class="page-item" style=" margin-left: 30px;">
+                        <input type="text" class="form-control" th:name="pageIndex" th:value="${filter.pageIndex}" style="width: 50px; text-align: right; display: inline-block;"/>
+                        /
+                        <th:block th:text="${filter.pageUnitTotal}"></th:block>
+                    </li>
+
+
+
+
+
+
+                </ul>
+            </nav>
+        </div>
     </form>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col" th:text="#{board.title}">제목</th>
-            <th scope="col" th:text="#{board.postType}">포스팅 타입</th>
-            <th scope="col" th:text="#{board.regDate}">등록일</th>
-        </tr>
-        </thead>
-        <tbody>
-        <th:block th:each="board : ${boardList}">
-            <tr th:onclick="|location.href='@{/post/{postId}(postId=${board.postId},postType=${board.postType})}'|">
-
-            <td th:text="${board.postId}">아이디</td>
-            <td th:text="${board.title}">타이틀</td>
-            <td th:text="${board.postType}">타입</td>
-            <td th:text="${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}">등록일</td>
-        </tr>
-        </th:block>
-
-        </tbody>
-    </table>
 </body>
 
 </th:block>

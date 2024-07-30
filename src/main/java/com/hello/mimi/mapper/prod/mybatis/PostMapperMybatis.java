@@ -1,7 +1,10 @@
-package com.hello.mimi.mapper.dev.mybatis;
+package com.hello.mimi.mapper.prod.mybatis;
 
 import com.hello.mimi.mapper.PostActiveMapper;
-import com.hello.mimi.standard.post.model.*;
+import com.hello.mimi.standard.post.model.FileInfo;
+import com.hello.mimi.standard.post.model.PhotoPostDTO;
+import com.hello.mimi.standard.post.model.PostDTO;
+import com.hello.mimi.standard.post.model.TextPostDTO;
 import com.hello.mimi.util.SearchFilter;
 import org.apache.ibatis.annotations.*;
 
@@ -10,29 +13,20 @@ import java.util.List;
 
 @Mapper
 public interface PostMapperMybatis extends PostActiveMapper {
-    String postFilter = "<where>" +
-                        "  <if test='title != null and title != \"\"'>" +
-                        "    AND p.title LIKE CONCAT('%', #{title}, '%')" +
-                        "  </if>" +
-                        "  <if test='postType != null and postType != \"\"'>" +
-                        "    AND p.post_type = #{postType} " +
-                        "  </if>" +
-                        "</where>";
-
     @Select("<script>" +
             "SELECT p.post_id, p.title, p.post_type, p.reg_date " +
             "FROM post p " +
-            postFilter +
+            "<where>" +
+            "  <if test='title != null and title != \"\"'>" +
+            "    AND p.title LIKE CONCAT('%', #{title}, '%')" +
+            "  </if>" +
+            "  <if test='title != null and title != \"\"'>" +
+            "    AND p.title LIKE CONCAT('%', #{title}, '%')" +
+            "  </if>" +
+            "</where>" +
             "LIMIT #{startRowNum}, #{cntPerPage}" +
             "</script>")
     List<PostDTO> postListByFilter(SearchFilter searchFilter);
-
-    @Select("<script>" +
-            "SELECT count(*) as totalCnt " +
-            "FROM post p " +
-            postFilter +
-            "</script>")
-    int postListByFilterCnt(SearchFilter searchFilter);
 
     @Select("SELECT post_id, title, body, post_type, status FROM post WHERE post_id = #{postId}")
     TextPostDTO readTextPost(PostDTO postDTO);
@@ -54,7 +48,7 @@ public interface PostMapperMybatis extends PostActiveMapper {
     @Options(useGeneratedKeys = true, keyProperty = "postId", keyColumn = "post_id")
     int insertPost(PostDTO postDTO);
 
-    @Insert("INSERT INTO post (title, body, status, post_type) VALUES (#{title}, #{body}, '1', #{postType})")
+    @Insert("INSERT INTO post (title, body, status) VALUES (#{title}, #{body}, '1')")
     @Options(useGeneratedKeys = true, keyProperty = "postId", keyColumn = "post_id")
     int insertTextPost(TextPostDTO postDTO);
 

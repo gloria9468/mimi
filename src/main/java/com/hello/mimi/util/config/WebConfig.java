@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.CacheControl;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
@@ -12,9 +15,21 @@ import java.util.Locale;
 
 @Configuration
 // @PropertySource("classpath:application.properties") // 없어도 됨.
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer {
     @Value("${file-store-path}")
     private String fStorePath;
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/file-store-path/**")
+                .addResourceLocations(fStorePath)
+                .setCacheControl(CacheControl.noCache().cachePrivate());
+
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/", "classpath:/public/")
+                .setCachePeriod(3600); // 3600 :: 1시간
+    }
+
 
     @Bean
     public SessionLocaleResolver localeResolver() {

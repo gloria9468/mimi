@@ -34,7 +34,6 @@ public class PostUsedDTOController {
     @GetMapping("/{postId}")
     public String readPost(@ModelAttribute("postDTO") PostDTO postDTO, @PathVariable Long postId, Model model) {
         postDTO = postService.readPost(postDTO);
-
         model.addAttribute("postDTO", postDTO);
         return "post/detail";
     }
@@ -55,16 +54,8 @@ public class PostUsedDTOController {
     public String createPost(@ModelAttribute("postDTO") PostDTO postDTO, RedirectAttributes redirectAttributes) throws IOException {
         System.out.println( postDTO.hashCode() );
 
-        if (postDTO instanceof PhotoPostDTO) {
-            PostDTO pDTO = new PostDTO(postDTO.getTitle(), postDTO.getPostType());
 
-            int createTextPostCnt = postService.createPost( (TextPostDTO) pDTO );
-            postDTO.setPostId(pDTO.getPostId());
-            PostDTOFactory.makePhotoDir((PhotoPostDTO) postDTO);
-            int createPhotoPostCnt = postService.createPost(postDTO);
-        } else if (postDTO instanceof TextPostDTO) {
-            int createCnt = postService.createPost(postDTO);
-        }
+        postService.createPost(postDTO);
 
         redirectAttributes.addFlashAttribute("postDTO", postDTO);
         redirectAttributes.addAttribute("postId", postDTO.getPostId());

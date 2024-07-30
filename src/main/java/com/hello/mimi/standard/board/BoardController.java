@@ -5,6 +5,8 @@ import com.hello.mimi.standard.board.service.BoardService;
 import com.hello.mimi.standard.post.model.PostDTO;
 import com.hello.mimi.standard.post.model.PostSearchFilter;
 import com.hello.mimi.util.CntPerPageEnum;
+import com.hello.mimi.util.PostTypeEnum;
+import com.hello.mimi.util.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +32,19 @@ public class BoardController {
 
     @GetMapping("/list")
     public String postListByFilter(@ModelAttribute("filter") PostSearchFilter postSearchFilter, Model model) {
+        PostTypeEnum[] postTypeEnum = PostTypeEnum.values();
+        System.out.println(((SearchFilter) postSearchFilter).toString());
         List<PostDTO> boardList= boardService.postListByFilter(postSearchFilter);
+        System.out.println(((SearchFilter) postSearchFilter).toString());
         model.addAttribute("boardList", boardList);
         model.addAttribute("filter", postSearchFilter);
+        model.addAttribute("postTypeEnum", postTypeEnum);
         return "board/list";
     }
 
     @PostMapping("/list")
     public String postListByFilterRedirect(@ModelAttribute("filter") PostSearchFilter postSearchFilter, RedirectAttributes redirectAttributes) {
+
         redirectAttributes.addFlashAttribute("filter", postSearchFilter);
         return "redirect:list";
     }

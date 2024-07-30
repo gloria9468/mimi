@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public interface PostActiveMapper {
-
+    int insertPost(PostDTO pDTO);
     int insertTextPost(PostDTO postDTO);
     int insertPhotoPost(PostDTO postDTO);
 
@@ -25,6 +25,7 @@ public interface PostActiveMapper {
 
 
     List<PostDTO> postListByFilter(SearchFilter searchFilter);
+    int postListByFilterCnt(SearchFilter searchFilter);
 
 
 }

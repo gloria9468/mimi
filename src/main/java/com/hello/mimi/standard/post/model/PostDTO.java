@@ -21,9 +21,12 @@ public class PostDTO {
     public PostDTO() {
     }
 
-    public PostDTO(String title, String postType) {
-        this.title = title;
-        this.postType = postType;
+    public PostDTO makePostDTO(String title, String postType) {
+        PostDTO pDTO = new PostDTO();
+        pDTO.setTitle(title);
+        pDTO.setPostType(postType);
+
+        return pDTO;
     }
 
     @Override
