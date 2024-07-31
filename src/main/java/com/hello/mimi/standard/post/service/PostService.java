@@ -1,6 +1,7 @@
 package com.hello.mimi.standard.post.service;
 
 import com.hello.mimi.mapper.PostActiveMapper;
+import com.hello.mimi.standard.place.model.PlaceDTO;
 import com.hello.mimi.standard.post.model.PhotoPostDTO;
 import com.hello.mimi.standard.post.model.PostDTO;
 import com.hello.mimi.standard.post.model.PostDTOFactory;
@@ -23,15 +24,22 @@ public class PostService{
     // application.properties 에 맞춰서 알아서 Mapper로 받아서 돌음.
     // 빨간 밑줄 괜찮음. // @Qualifier 안해도 됨.
 
-    private final FilePathMaker filePathMaker;
 
     public List<PostDTO> postListByFilter(SearchFilter searchFilter){
         return postActiveMapper.postListByFilter(searchFilter);
     }
 
     public void createPost(PostDTO postDTO) throws IOException {
+        PlaceDTO placeDTO = postActiveMapper.readPlace(postDTO);
+        if(placeDTO == null) {
+            postActiveMapper.insertPlace(postDTO);
+        }else{
+            postDTO.setPlaceDTO(placeDTO);
+        }
+
+        System.out.println(postDTO.getPlaceDTO());
         if (postDTO instanceof PhotoPostDTO) {
-            PostDTO pDTO = postDTO.makePostDTO(postDTO.getTitle(), postDTO.getPostType());
+            PostDTO pDTO = postDTO.makePostDTO(postDTO.getTitle(), postDTO.getPostType(), postDTO.getPlaceDTO());
 
             int createTextPostCnt = postActiveMapper.insertPost( pDTO );
             if(createTextPostCnt > 0) {
@@ -42,6 +50,7 @@ public class PostService{
         } else if (postDTO instanceof TextPostDTO) {
             int createCnt = postActiveMapper.insertTextPost(postDTO);
         }
+
     }
 
     public PostDTO readPost(PostDTO postDTO) {
@@ -50,12 +59,6 @@ public class PostService{
             case "text" -> postActiveMapper.readTextPost(postDTO);
             case "photo" -> {
                 yield postActiveMapper.readPhotoPost(postDTO);
-                /*
-                String fileStorePath = filePathMaker.makeFilePath("");
-
-                ((PhotoPostDTO) postDTO).setFileStorePath(fileStorePath);
-                yield (PhotoPostDTO) postDTO;
-                 */
             }
             default -> throw new IllegalArgumentException("exception --- from :: readRost ----");
         };

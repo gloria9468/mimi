@@ -1,5 +1,6 @@
 package com.hello.mimi.standard.post.model;
 
+import com.hello.mimi.standard.place.model.PlaceDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,13 +19,17 @@ public class PostDTO {
     @DateTimeFormat(pattern = "yyyy-mm-dd hh:mm")
     private Date modifyDate;
 
+    private PlaceDTO placeDTO;
+
+
     public PostDTO() {
     }
 
-    public PostDTO makePostDTO(String title, String postType) {
+    public PostDTO makePostDTO(String title, String postType, PlaceDTO placeDTO) {
         PostDTO pDTO = new PostDTO();
         pDTO.setTitle(title);
         pDTO.setPostType(postType);
+        pDTO.setPlaceDTO(placeDTO);
 
         return pDTO;
     }

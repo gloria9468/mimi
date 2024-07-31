@@ -30,8 +30,5 @@ public class MimiController {
 
 
 
-    @GetMapping("/mapPlace/test")
-    public String mapPlaceTest(){
-        return "/mapPlace/test";
-    }
+
 }

@@ -42,7 +42,7 @@
 <body>
     <div style="height: 50px;">
         <p class="btn btn-warning btn-sm" style="width: 100px; float: left;" th:text="|${filter.totalCnt} 건|"></p>
-        <button type="button" class="btn btn-primary" style="width: 100px; float: right;" th:onclick="|location.href='@{/post/create}'|">글쓰기</button>
+        <button type="button" class="btn btn-primary" style="width: 100px; float: right;" th:onclick="|location.href='@{/place/searchPlace}'|">글쓰기</button>
     </div>
     <form action="/board/list" method="post" >
         <div style="display: flex;">
@@ -71,6 +71,7 @@
                 <th scope="col">#</th>
                 <th scope="col" th:text="#{board.title}">제목</th>
                 <th scope="col" th:text="#{board.postType}">포스팅 타입</th>
+                <th scope="col" th:text="#{placeDTO.placeTitle}">장소명</th>
                 <th scope="col" th:text="#{board.regDate}">등록일</th>
             </tr>
             </thead>
@@ -81,6 +82,7 @@
                 <td th:text="${board.postId}">아이디</td>
                 <td th:text="${board.title}">타이틀</td>
                 <td th:text="${board.postType}">타입</td>
+                <td th:text="${board.placeDTO.placeTitle}">장소명</td>
                 <td th:text="${#dates.format(board.regDate, 'yyyy-MM-dd HH:mm:ss')}">등록일</td>
             </tr>
             </th:block>
@@ -91,7 +93,7 @@
 
             <nav>
                 <ul class="pagination" style="justify-content: center;">
-                    <li class="page-item">
+                    <li class="page-item"  title="처음으로">
                         <a class="page-link" style="padding: 0.275rem 0.55rem;">
                             <span aria-hidden="true">
                                 <input type="submit" th:name="pageIndex" th:value="1"/>
@@ -106,9 +108,9 @@
                     </li>
                     </th:block>
 
-                    <li class="page-item">
+                    <li class="page-item" title="끝으로">
                         <a class="page-link" style="padding: 0.275rem 0.55rem;">
-                            <span aria-hidden="true">
+                            <span aria-hidden="true" >
                                 <input type="submit" th:name="pageIndex" th:value="${filter.pageUnitTotal}"/>
                                 &raquo;
                             </span>

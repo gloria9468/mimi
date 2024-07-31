@@ -1,5 +1,6 @@
 package com.hello.mimi.mapper;
 
+import com.hello.mimi.standard.place.model.PlaceDTO;
 import com.hello.mimi.standard.post.model.PostDTO;
 import com.hello.mimi.util.SearchFilter;
 
@@ -10,6 +11,8 @@ public interface PostActiveMapper {
     int insertPost(PostDTO pDTO);
     int insertTextPost(PostDTO postDTO);
     int insertPhotoPost(PostDTO postDTO);
+    PlaceDTO readPlace(PostDTO postDTO);
+    int insertPlace(PostDTO postDTO);
 
 
     PostDTO readTextPost(PostDTO postDTO);
@@ -26,6 +29,7 @@ public interface PostActiveMapper {
 
     List<PostDTO> postListByFilter(SearchFilter searchFilter);
     int postListByFilterCnt(SearchFilter searchFilter);
+
 
 
 }

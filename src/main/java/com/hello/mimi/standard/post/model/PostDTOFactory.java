@@ -27,7 +27,7 @@ public class PostDTOFactory {
 
     public PostDTOFactory(FilePathMaker filePathMaker) {
         this.filePathMaker = filePathMaker;
-        fileStorePath = filePathMaker.makeFilePath("");
+        fileStorePath = (filePathMaker.makeFilePath("")).replace("file:", "");
     }
 
 
@@ -48,7 +48,7 @@ public class PostDTOFactory {
             throw new IllegalArgumentException("No files to upload");
         }
 
-
+        //System.out.println("fileStorePath----" + fileStorePath);
         String realPath = fileStorePath;
         String today = new SimpleDateFormat("yyMMdd").format(new Date());
         File folder = new File(realPath, today);

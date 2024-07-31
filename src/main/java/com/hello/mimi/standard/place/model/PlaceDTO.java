@@ -5,7 +5,9 @@ import lombok.Setter;
 
 @Getter @Setter
 public class PlaceDTO {
-    private String title;
+
+    private Long placeId;
+    private String placeTitle;
     private String roadAddress;
     private String mapx;
     private String mapy;
@@ -13,7 +15,8 @@ public class PlaceDTO {
     @Override
     public String toString() {
         return "PlaceDTO{" +
-                "title='" + title + '\'' +
+                "placeId='" + placeId + '\'' +
+                "placeTitle='" + placeTitle + '\'' +
                 ", roadAddress='" + roadAddress + '\'' +
                 ", mapx='" + mapx + '\'' +
                 ", mapy='" + mapy + '\'' +

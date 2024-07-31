@@ -15,81 +15,31 @@
     .searchResult .resultItem{border:1px solid mediumpurple;}
 </style>
 <body>
+<div>
+    <div>해당 데이터는 Naver 지도에서 "키워드 + 맛집" 과 동일한 결과값 입니다.</div>
+    <input type="text" id="searchInput" class="form-control"  placeholder="맛집을 검색해주세요."  />
+</div>
 <div id="map" style="width:100%;height:400px;"></div>
 <div class="searchResult">
-    <div id="defaultItemDiv">
+    <div id="defaultItemDiv" style="display: none;">
         <div id="title"></div>
         <div id="roadAddress"></div>
         <input type="button" class="w-10 btn btn-primary btn-sm" value="리뷰작성"/>
     </div>
 </div>
 <script type="text/javascript" th:inline="javascript">
-    var searchResult = {
-        "lastBuildDate": "Fri, 26 Jul 2024 13:01:28 +0900",
-        "total": 5,
-        "start": 1,
-        "display": 5,
-        "items": [
-            {
-                "title": "<b>초원</b>웰빙한식뷔페",
-                "link": "",
-                "category": "음식점>한식뷔페",
-                "description": "",
-                "telephone": "",
-                "address": "세종특별자치시 소정면 운당리 132-4",
-                "roadAddress": "세종특별자치시 소정면 운당9길 58",
-                "mapx": "1271510589",
-                "mapy": "366993721"
-            },
-            {
-                "title": "<b>초원</b>삼계탕",
-                "link": "",
-                "category": "한식>백숙,삼계탕",
-                "description": "",
-                "telephone": "",
-                "address": "세종특별자치시 나성동 206 B동 402호",
-                "roadAddress": "세종특별자치시 나성로 38 B동 402호",
-                "mapx": "1272639492",
-                "mapy": "364838645"
-            },
-            {
-                "title": "<b>초원</b>분식",
-                "link": "",
-                "category": "분식>종합분식",
-                "description": "",
-                "telephone": "",
-                "address": "세종특별자치 조치원읍 상리 18-4",
-                "roadAddress": "세종특별자치 조치원읍 조치원9길 6",
-                "mapx": "1273030917",
-                "mapy": "366026140"
-            },
-            {
-                "title": "<b>초원</b>갈비",
-                "link": "",
-                "category": "음식점>한식",
-                "description": "",
-                "telephone": "",
-                "address": "세종특별자치시 금남면 용포리 350-10",
-                "roadAddress": "세종특별자치시 금남면 용포2길 47",
-                "mapx": "1272776469",
-                "mapy": "364633980"
-            },
-            {
-                "title": "<b>초원</b>식당",
-                "link": "https://blog.naver.com/dnswntks3858",
-                "category": "음식점>한식",
-                "description": "",
-                "telephone": "",
-                "address": "세종특별자치시 전의면 읍내리 126-1",
-                "roadAddress": "세종특별자치시 전의면 운주산로 1254",
-                "mapx": "1271978897",
-                "mapy": "366803046"
-            }
-        ]
-    }
-
-    $().ready(function () {
-        getSearchData();
+    const searchInput = document.getElementById("searchInput");
+    // 입력 필드에 keydown 이벤트 리스너 추가
+    searchInput.addEventListener("keydown", function(event) {
+        // Enter 키 코드 확인 (13)
+        if (event.key === "Enter") {
+            // 입력된 값 가져오기
+            const keyword = searchInput.value;
+            // alert 창 표시
+            getSearchData(keyword);
+            // 기본 동작 방지 (옵션, 필요에 따라 설정)
+            event.preventDefault();
+        }
     });
 
 
@@ -103,6 +53,7 @@
         const newNode = resultItemDiv.cloneNode(true);
         newNode.id = "resultItem"+ idNum;
         newNode.className = "resultItem";
+        newNode.style.display = "block";
         //newNode.setAttribute("data-mapx", mapx);
         //newNode.setAttribute("data-mapy", mapy);
         newNode.onclick = () => { setMapPosition(mapy, mapx); };
@@ -127,8 +78,10 @@
             if (item.hasOwnProperty(key)) {
                 const hiddenField = document.createElement("input");
                 hiddenField.type = "hidden";
-                hiddenField.name = key;
-                hiddenField.value = item[key];
+                var setKey = key;
+                hiddenField.value = (item[key]).replace(/<\/?[^>]+(>|$)/g, "");
+                if(key == "title") setKey = "placeTitle";
+                hiddenField.name = setKey;
                 form.appendChild(hiddenField);
             }
         }
@@ -138,14 +91,33 @@
         form.submit();
     }
 
-    function getSearchData(){
-        var items = searchResult.items;
-        var itemsLength = items.length;
-        $(".resultItem").remove();
-        for(var i in items){
-            deepClone( i, items[i] );
-        }
-        $("#defaultItemDiv").css("display", "none");
+    function getSearchData(keyword){
+        $.ajax({
+            url: "/place/api/local",
+            type: "GET",
+            data : {
+                "query" : keyword
+            },
+            success: function(response) {
+                //console.log('Success:', response);
+                var searchResult = JSON.parse(response);
+                var items = searchResult.items;
+                var itemsLength = items.length;
+                $(".resultItem").remove();
+                for(var i in items){
+                    deepClone( i, items[i] );
+                }
+                if(itemsLength === 0){
+                    const newNode = document.createElement("div");
+                    newNode.className = "resultItem";
+                    newNode.innerText = "검색 결과가 없습니다";
+                    document.getElementById("defaultItemDiv").before(newNode);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+            }
+        });
     }
 
 

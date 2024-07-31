@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("dev")
-@MapperScan("com.hello.mimi.mapper.dev")
-public class DevConfig {
+@Profile("dev-postgre")
+@MapperScan("com.hello.mimi.mapper.dev.postgre")
+public class DevPostgreConfig {
 
 }

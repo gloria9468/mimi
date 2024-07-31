@@ -33,9 +33,7 @@ public class BoardController {
     @GetMapping("/list")
     public String postListByFilter(@ModelAttribute("filter") PostSearchFilter postSearchFilter, Model model) {
         PostTypeEnum[] postTypeEnum = PostTypeEnum.values();
-        System.out.println(((SearchFilter) postSearchFilter).toString());
         List<PostDTO> boardList= boardService.postListByFilter(postSearchFilter);
-        System.out.println(((SearchFilter) postSearchFilter).toString());
         model.addAttribute("boardList", boardList);
         model.addAttribute("filter", postSearchFilter);
         model.addAttribute("postTypeEnum", postTypeEnum);

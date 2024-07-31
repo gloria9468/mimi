@@ -2,6 +2,7 @@ package com.hello.mimi.standard.post;
 
 
 import com.hello.mimi.standard.place.model.PlaceDTO;
+import com.hello.mimi.standard.post.model.PostDTO;
 import com.hello.mimi.standard.post.service.PostService;
 import com.hello.mimi.util.PostTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,13 @@ public class PostController {
     PostService postService;
 
     @GetMapping("/create")
-    public String createPostForm(@ModelAttribute PlaceDTO placeDTO, Model model) {
+    public String createPostForm(@ModelAttribute("placeDTO") PlaceDTO placeDTO, Model model) {
+        PostDTO postDTO = new PostDTO();
+        postDTO.setPlaceDTO(placeDTO);
+
         PostTypeEnum[] postTypeEnum = PostTypeEnum.values();
         model.addAttribute("postTypeEnum", postTypeEnum);
-        model.addAttribute("placeDTO", placeDTO);
+        model.addAttribute("postDTO", postDTO);
         return "post/create";
     }
 

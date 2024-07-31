@@ -1,5 +1,6 @@
 package com.hello.mimi.standard.post;
 
+import com.hello.mimi.standard.place.model.PlaceDTO;
 import com.hello.mimi.standard.post.model.*;
 import com.hello.mimi.standard.post.service.PostService;
 import com.hello.mimi.util.bean.BeanManager;
@@ -26,10 +27,12 @@ public class PostUsedDTOController {
 
     @ModelAttribute("postDTO")
     public PostDTO createPostDTO(@RequestParam String postType) {
+        System.out.println("createPostDTO----" + postType);
         PostDTO postDTO = PostDTOFactory.createPostDTO(postType);
         System.out.println( "postDTO.hashCode() ---" + postDTO.hashCode() );
         return postDTO;
     }
+
 
     @GetMapping("/{postId}")
     public String readPost(@ModelAttribute("postDTO") PostDTO postDTO, @PathVariable Long postId, Model model) {
@@ -51,9 +54,11 @@ public class PostUsedDTOController {
     }
 
     @PostMapping("/create")
-    public String createPost(@ModelAttribute("postDTO") PostDTO postDTO, RedirectAttributes redirectAttributes) throws IOException {
+    public String createPost(@ModelAttribute("postDTO") PostDTO postDTO,
+                             @ModelAttribute("placeDTO") PlaceDTO placeDTO,
+                             RedirectAttributes redirectAttributes) throws IOException {
         System.out.println( postDTO.hashCode() );
-
+        postDTO.setPlaceDTO(placeDTO);
 
         postService.createPost(postDTO);
 

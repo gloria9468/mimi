@@ -38,12 +38,51 @@
 </script>
 <body>
     <div>
-        <h3 th:text="${postDTO.postId}"></h3>
-        <h3 th:text="${postDTO.title}"></h3>
-        <h3 th:if="${postDTO.postType == 'text' && postDTO.body != null}" th:text="${postDTO.body}"></h3>
-        <h3 th:text="${postDTO.postType}"></h3>
-        <h3 th:text="${postDTO.status}"></h3>
+        <table class="table table-hover">
+            <tr>
+                <th th:text="#{placeDTO.placeId}"></th>
+                <td th:text="${postDTO.placeDTO.placeId}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{placeDTO.placeTitle}"></th>
+                <td th:text="${postDTO.placeDTO.placeTitle}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{placeDTO.roadAddress}"></th>
+                <td th:text="${postDTO.placeDTO.roadAddress}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{placeDTO.mapx}"></th>
+                <td th:text="${postDTO.placeDTO.mapx}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{placeDTO.mapy}"></th>
+                <td th:text="${postDTO.placeDTO.mapy}"></td>
+            </tr>
 
+
+
+            <tr>
+                <th th:text="#{post.postId}"></th>
+                <td th:text="${postDTO.postId}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{board.title}"></th>
+                <td th:text="${postDTO.title}"></td>
+            </tr>
+            <tr th:if="${postDTO.postType == 'text' && postDTO.body != null}">
+                <th>body</th>
+                <td th:text="${postDTO.body}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{board.postType}"></th>
+                <td th:text="${postDTO.postType}"></td>
+            </tr>
+            <tr>
+                <th>status</th>
+                <td th:text="${postDTO.status}"></td>
+            </tr>
+        </table>
         <th:block th:if="${postDTO.postType == 'photo' && postDTO.fileInfos != null}">
             <th:block th:each="file : ${postDTO.fileInfos}">
                 <img th:src="@{|/file-store-path/${file.saveFolder}/${file.saveFile}|}" th:srclang="${file.originFileName}" />
