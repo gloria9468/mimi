@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout}">
+
+<th:block layout:fragment="content">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title layout:fragment="title">--네이버지도.</title>
+    <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=zd6h8polwu"></script>
+</head>
+<style>
+    .searchResult .resultItem{border:1px solid mediumpurple;}
+</style>
+<body>
+<div>
+    <div>해당 데이터는 Naver 지도에서 "키워드 + 맛집" 과 동일한 결과값 입니다.</div>
+    <input type="text" id="searchInput" class="form-control"  placeholder="맛집을 검색해주세요."  />
+</div>
+<div id="map" style="width:100%;height:400px;"></div>
+<div class="searchResult">
+    <div id="defaultItemDiv" style="display: none;">
+        <div id="title"></div>
+        <div id="roadAddress"></div>
+        <input type="button" class="w-10 btn btn-primary btn-sm" value="리뷰작성"/>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    const searchInput = document.getElementById("searchInput");
+    // 입력 필드에 keydown 이벤트 리스너 추가
+    searchInput.addEventListener("keydown", function(event) {
+        // Enter 키 코드 확인 (13)
+        if (event.key === "Enter") {
+            // 입력된 값 가져오기
+            const keyword = searchInput.value;
+            // alert 창 표시
+            getSearchData(keyword);
+            // 기본 동작 방지 (옵션, 필요에 따라 설정)
+            event.preventDefault();
+        }
+    });
+
+
+    function deepClone(idNum, item){
+        var title = item.title;
+        var roadAddress = item.roadAddress;
+        var mapx = (item.mapx).toString().replace(/^(\d{3})(\d+)/, '$1.$2');
+        var mapy = (item.mapy).toString().replace(/^(\d{2})(\d+)/, '$1.$2');
+
+        const resultItemDiv = document.getElementById("defaultItemDiv");
+        const newNode = resultItemDiv.cloneNode(true);
+        newNode.id = "resultItem"+ idNum;
+        newNode.className = "resultItem";
+        newNode.style.display = "block";
+        //newNode.setAttribute("data-mapx", mapx);
+        //newNode.setAttribute("data-mapy", mapy);
+        newNode.onclick = () => { setMapPosition(mapy, mapx); };
+        const reviewBtnNode = newNode.querySelector("input[type=button]");
+        reviewBtnNode.onclick = () => { getCreatePost(item); };
+
+        Array.from(newNode.children).forEach((childNode) => {
+            var childNodeId = childNode.id;
+            childNode.innerHTML = eval(childNodeId);
+        });
+        resultItemDiv.before(newNode);
+    }
+
+    function getCreatePost(item){
+        var url = "/post/getCreatePost";
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = url;
+
+        // JSON 데이터를 form 데이터로 변환
+        for (const key in item) {
+            if (item.hasOwnProperty(key)) {
+                const hiddenField = document.createElement("input");
+                hiddenField.type = "hidden";
+                var setKey = key;
+                hiddenField.value = (item[key]).replace(/<\/?[^>]+(>|$)/g, "");
+                if(key == "title") setKey = "placeTitle";
+                hiddenField.name = setKey;
+                form.appendChild(hiddenField);
+            }
+        }
+
+        // form을 문서에 추가하고 제출
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function getSearchData(keyword){
+        $.ajax({
+            url: "/place/api/local",
+            type: "GET",
+            data : {
+                "query" : keyword
+            },
+            success: function(response) {
+                //console.log('Success:', response);
+                var searchResult = JSON.parse(response);
+                var items = searchResult.items;
+                var itemsLength = items.length;
+                $(".resultItem").remove();
+                for(var i in items){
+                    deepClone( i, items[i] );
+                }
+                if(itemsLength === 0){
+                    const newNode = document.createElement("div");
+                    newNode.className = "resultItem";
+                    newNode.innerText = "검색 결과가 없습니다";
+                    document.getElementById("defaultItemDiv").before(newNode);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+            }
+        });
+    }
+
+
+    var position = new naver.maps.LatLng(36.5046874, 127.2654148);
+    var map = new naver.maps.Map('map', {
+        center: position,
+        zoom: 15
+    });
+
+    var marker = new naver.maps.Marker({
+        position: position,
+        map: map
+    });
+
+    naver.maps.Event.addListener(map, 'click', function(e) {
+        marker.setPosition(e.latlng);
+        var y_lat = (e.latlng)._lat;
+        var x_lng = (e.latlng)._lng;
+
+        console.log(y_lat + "--...- " + x_lng);
+
+
+        setMapPosition(y_lat, x_lng);
+    });
+
+    function setMapPosition(y_lat, x_lng) {
+        console.log("setMapPosition---", y_lat, x_lng);
+        position = new naver.maps.LatLng(y_lat, x_lng);
+        map = new naver.maps.Map('map', {
+            center: position,
+            zoom: 18
+        });
+
+        marker = new naver.maps.Marker({
+            position: position,
+            map: map
+        });
+
+
+    }
+</script>
+</body>
+</th:block>
+</html>

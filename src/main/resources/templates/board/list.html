@@ -42,7 +42,7 @@
 <body>
     <div style="height: 50px;">
         <p class="btn btn-warning btn-sm" style="width: 100px; float: left;" th:text="|${filter.totalCnt} 건|"></p>
-        <button type="button" class="btn btn-primary" style="width: 100px; float: right;" th:onclick="|location.href='@{/place/searchPlace}'|">글쓰기</button>
+        <button type="button" class="btn btn-primary" style="width: 100px; float: right;" th:onclick="|location.href='@{/place/search}'|">글쓰기</button>
     </div>
     <form action="/board/list" method="post" >
         <div style="display: flex;">

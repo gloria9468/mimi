@@ -15,9 +15,9 @@ public class PlaceController {
     @Autowired
     private RestTemplate restTemplate;
 
-    @GetMapping("/searchPlace")
-    public String mapPlaceTest(){
-        return "/place/searchPlace";
+    @GetMapping("/search")
+    public String mapPlaceSearch(){
+        return "place/search";
     }
 
     @ResponseBody
