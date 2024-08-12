@@ -6,23 +6,33 @@ import com.hello.mimi.standard.post.model.PhotoPostDTO;
 import com.hello.mimi.standard.post.model.PostDTO;
 import com.hello.mimi.standard.post.model.PostDTOFactory;
 import com.hello.mimi.standard.post.model.TextPostDTO;
+import com.hello.mimi.standard.post.strategy.PhotoPostStrategy;
+import com.hello.mimi.standard.post.strategy.PostStrategy;
+import com.hello.mimi.standard.post.strategy.TextPostStrategy;
 import com.hello.mimi.util.SearchFilter;
 import com.hello.mimi.util.vo.FilePathMaker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-@RequiredArgsConstructor // @Autowired 안 써도 됨.
 public class PostService{
-    //@Autowired
-    //PostRepository postRepository;
-
-    private final PostActiveMapper postActiveMapper;
+    @Autowired
+    private PostActiveMapper postActiveMapper;
     // application.properties 에 맞춰서 알아서 Mapper로 받아서 돌음.
     // 빨간 밑줄 괜찮음. // @Qualifier 안해도 됨.
+    private final Map<String, PostStrategy> strategyMap = new HashMap<>();
+    public PostService(PostActiveMapper postActiveMapper) {
+        strategyMap.put("text", new TextPostStrategy(postActiveMapper));
+        strategyMap.put("photo", new PhotoPostStrategy(postActiveMapper));
+    }
+
+
 
 
     public List<PostDTO> postListByFilter(SearchFilter searchFilter){
@@ -54,15 +64,17 @@ public class PostService{
     }
 
     public PostDTO readPost(PostDTO postDTO) {
+        Class<?> clazz = postDTO.getClass();
+        System.out.println("The class of postDTO is: " + clazz.getName());
+
+
         String postType = postDTO.getPostType();
-        postDTO = switch (postType){
-            case "text" -> postActiveMapper.readTextPost(postDTO);
-            case "photo" -> {
-                yield postActiveMapper.readPhotoPost(postDTO);
-            }
-            default -> throw new IllegalArgumentException("exception --- from :: readRost ----");
-        };
-        return postDTO;
+        PostStrategy strategy = strategyMap.get(postType);
+
+        if (strategy == null) {
+            throw new IllegalArgumentException("전략에 없다 : " + postType);
+        }
+        return strategy.readPost(postDTO);
     }
 
     public int updatePost(PostDTO postDTO) {

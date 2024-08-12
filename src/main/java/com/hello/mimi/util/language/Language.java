@@ -39,10 +39,10 @@ public class Language {
 
         String test = request.getRequestURI();
         if(lang == null) {
-            System.out.println("else---" + rtnLanguageDTO.getLang());
+            //System.out.println("else---" + rtnLanguageDTO.getLang());
             throw new IllegalArgumentException("lang == null: " + test);
         }
-        System.out.println("request.getRequestURI() --- " + test);
+        //System.out.println("request.getRequestURI() --- " + test);
 
         session.setAttribute("language", rtnLanguageDTO);
         return rtnLanguageDTO;
